@@ -1,0 +1,19 @@
+html, body {
+    font-family: 'Karla', sans-serif;
+}
+
+.header {
+    background-color: #1ca35f;
+    display: flex;
+    color: white;
+    align-items: center;
+    gap: 30px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+
+.onclicke {
+    text-decoration: underline;
+    color: #37246b;
+}
+
