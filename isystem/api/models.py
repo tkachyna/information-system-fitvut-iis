@@ -2,10 +2,25 @@
 # IIS 2022/2023
 # Author: Lada Krofingerova
 # Other project authors: Tadeas Kachyna, Lucia Makaiova
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+
+
+class User(AbstractUser):
+    USER_ROLE_CHOICES = (
+        (1, 'citizen'),
+        (2, 'technician'),
+        (3, 'manager'),
+        (4, 'admin'),
+    )
+
+    role = models.PositiveSmallIntegerField(choices=USER_ROLE_CHOICES)
+
 
 # Table for persons
 class Person(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=256)
     surname = models.CharField(max_length=256)
     city = models.CharField(max_length=256)

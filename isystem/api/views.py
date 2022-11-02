@@ -12,10 +12,18 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from stack_data import Serializer
 
 from .serializers import ModelSerializer, TicketSerializer
-from .models import Ticket
-from .models import Person
+from .models import Ticket, Person
+
+Ticket = Ticket.sa
+Person = Person.sa
 
 
+def listing(request):
+    data = {
+        "persons": Person.query().filter(Person.user.has(role=2)),
+    }
+
+    return render(request, "listing.html", data)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
