@@ -12,15 +12,16 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from stack_data import Serializer
 
 from .serializers import ModelSerializer, TicketSerializer
-from .models import Ticket, Person
-
+from .models import Ticket, User
+#make entities available as SQLAlchemy models
 Ticket = Ticket.sa
-Person = Person.sa
+User = User.sa
 
 
+# listing view for testing queries
 def listing(request):
     data = {
-        "persons": Person.query().filter(Person.user.has(role=2)),
+        "users" : User.query().filter(User.role == 1),
     }
 
     return render(request, "listing.html", data)

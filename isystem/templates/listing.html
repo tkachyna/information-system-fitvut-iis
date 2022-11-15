@@ -3,8 +3,8 @@
 {% block content %}
 <h1>Blog Listing</h1>
 <ul>
-{% for person in persons %}
-  <li> <h2>{{person.name}}</h2> </li>
+{% for user in users %}
+  <li> <h2>{{user.username}}</h2> </li>
 {% endfor %}
 </ul>
 {% endblock content %}
