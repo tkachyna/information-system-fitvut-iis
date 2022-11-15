@@ -2,21 +2,26 @@
 # IIS 2022/2023
 # Author: Lada Krofingerova
 # Other project authors: Tadeas Kachyna, Lucia Makaiova
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
 
-# Table for persons
-class Person(models.Model):
-    name = models.CharField(max_length=256)
-    surname = models.CharField(max_length=256)
+
+class User(AbstractUser):
+    USER_ROLE_CHOICES = (
+        (1, 'citizen'),
+        (2, 'technician'),
+        (3, 'manager'),
+        (4, 'admin'),
+    )
+
+    role = models.PositiveSmallIntegerField(choices=USER_ROLE_CHOICES, default=1)
     city = models.CharField(max_length=256)
     street = models.CharField(max_length=256)
-    number_of_house = models.CharField(max_length=256)  # regex??
-    zipcode = models.CharField(max_length=6)            # regex: 3 nums, space, 2 nums
-    phone_number = models.CharField(max_length=11)      # regex: 3 nums, space, 3 nums, space, 3 nums
-    email = models.EmailField()
-    role = models.CharField(max_length=256)             # try choices -> technician, city_admin, citizen
-    login = models.CharField(max_length=256)
-    password = models.CharField(max_length=256)
+    house_number = models.CharField(max_length=256)  # regex??
+    zipcode = models.CharField(max_length=6)  # regex: 3 nums, space, 2 nums
+    phone_number = models.CharField(max_length=11)  # regex: 3 nums, space, 3 nums, space, 3 nums
+
 
 
 # Table for tickets
@@ -24,8 +29,8 @@ class Ticket(models.Model):
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=1024)
     state = models.CharField(max_length=256)                                      # which states? ->
-    customer_id = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="customer")             # on delete behaviour
-    admin_id = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="admin")                # on delete
+    customer_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="customer")             # on delete behaviour
+    admin_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="admin")                # on delete
 
 
 # Request table
@@ -35,7 +40,7 @@ class Request(models.Model):
     real_time = models.FloatField()
     state = models.CharField(max_length=256)        # as states
     ticket_id = models.ForeignKey(Ticket, on_delete=models.CASCADE)            # foreign key
-    technicians = models.ManyToManyField(Person)        # technician-request
+    technicians = models.ManyToManyField(User)        # technician-request
 
 
 # Comment-ticket - weak entity
@@ -44,7 +49,7 @@ class TicketComment(models.Model):
     # id = models.AutoField()                  # autoincrement if possible
     text = models.CharField(max_length=1024)
     creation_date_time = models.DateTimeField()
-    author_id = models.ForeignKey(Person, on_delete=models.CASCADE)           # foreign key to persons
+    author_id = models.ForeignKey(User, on_delete=models.CASCADE)           # foreign key to persons
 
     # this should simulate weak entity
     class Meta:
@@ -57,7 +62,7 @@ class RequestComment(models.Model):
     # id = models.AutoField()              # autoincrement
     text = models.CharField(max_length=1024)
     creation_date_time = models.DateTimeField()
-    author_id = models.ForeignKey(Person, on_delete=models.CASCADE)       # foreign key
+    author_id = models.ForeignKey(User, on_delete=models.CASCADE)       # foreign key
 
     class Meta:
         unique_together = ('request_id', 'id')
