@@ -13,7 +13,7 @@ const HomePage = () => {
 
 
   let getNotes = async() =>{
-      let response = await fetch('http://127.0.0.1:8000/api/tickets/', {
+      let response = await fetch('https://smart-city-test.herokuapp.com/api/tickets/', {
           method:'GET',
           headers:{
               'Content-Type':'application/json',
