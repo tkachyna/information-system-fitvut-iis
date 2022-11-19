@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-(8kvo!*ns@-2%_xf05duf!a^n0437b931s=$v%t=q-19-lgu=o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://smart-city-test.herokuapp.com']
 
 
 # Application definition
@@ -124,8 +124,13 @@ WSGI_APPLICATION = 'isystem.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'database.sqlite',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '<d9qsrplp2cv1ao>',
+        'USER': '<sjveswfknevejv>',
+        'PASSWORD': '<9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f>',
+        'HOST': '<ec2-52-18-116-67.eu-west-1.compute.amazonaws.com
+>',
+        'PORT': '5432',
     }
 }
 
