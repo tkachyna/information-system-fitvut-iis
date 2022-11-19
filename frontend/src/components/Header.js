@@ -8,21 +8,21 @@ const Header = () => {
 
   let {user, logoutUser} = useContext(AuthContext)
 
+    function redirectHome() {
+      <Link to="/" >Home</Link>
+    }
+
     return (
       <div className='header'>
-        <h2>Smart City!</h2>
-        <div>
+        < h2>Informační systém správy závad</h2>
+        
         <Link to="/" >Home</Link>
-        <span>  |  </span>
-        {user ? (
-          <p className='onclicke' onClick={logoutUser}>Logout</p>
-        ):(
-          <Link to="/login">Login</Link>
-        )}
-        </div>
-        {user && <p>Hello Ave</p>}
+        {user && <p className='onclicke' onClick={logoutUser}>Logout</p>}
+        {!user && <Link to="/login">Login</Link>}
+   
+        
+
       </div>
     )
   }
-
 export default Header

@@ -3,17 +3,47 @@ html, body {
 }
 
 .header {
-    background-color: #1ca35f;
+    background-color: #1e81b0;
     display: flex;
-    color: white;
+    color: #eeeee4;
     align-items: center;
     gap: 30px;
     padding-left: 10px;
     margin-bottom: 10px;
+    border-radius:  10px;
+
+}
+
+.button {
+    background-color: aquamarine;
+    border-radius: 10px;
+}
+
+header-button-log {
+    position: relative;
 }
 
 .onclicke {
     text-decoration: underline;
-    color: #37246b;
+    color: blue;
 }
 
+
+input {
+    height: 30px;
+    width: 200px;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.signup-submit {
+    width: 200px;
+    height: 30px;
+    position: fixed;
+    margin-bottom: 50px;
+}
+
+.signup-login { 
+    margin-top: 50px;
+}

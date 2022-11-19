@@ -11,12 +11,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from stack_data import Serializer
 
+import json
 from .serializers import ModelSerializer, TicketSerializer
 from .models import Ticket, User
 #make entities available as SQLAlchemy models
-Ticket = Ticket.sa
-User = User.sa
-
 
 # listing view for testing queries
 def listing(request):
@@ -35,6 +33,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['username'] = user.username
         token['password'] = user.password
+        token['role'] = 'admin' if user.username == 'admin' else 'citizen'
         # ...
 
         return token
@@ -52,12 +51,14 @@ def getRoutes(request):
     return Response(routes)
 
 
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getTickets(request):
-    user = request.user
-    ticket = user.note_set.all()
-    serializer = TicketSerializer(ticket, many=True)
-    return Response(serializer.data)
+@api_view(['POST'])
+def regUser(request):
+    print("User logged")
+    if request.method == 'POST':    
+        print("User logged")
+        data = json.loads(request.body)
+        print(data['password'])
+        user = User.objects.create_user(username=data['user'],
+                              email=data['email'],
+                              password=data['password'])
+        return HttpResponse()
