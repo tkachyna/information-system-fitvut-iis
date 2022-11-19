@@ -14,7 +14,7 @@ const Header = () => {
 
     return (
       <div className='header'>
-        < h2>Informační systém správy závad</h2>
+        < h2>{" >> Informační systém správy závad"}</h2>
         
         <Link to="/" >Home</Link>
         {user && <p className='onclicke' onClick={logoutUser}>Logout</p>}

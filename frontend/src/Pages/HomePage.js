@@ -13,7 +13,7 @@ const HomePage = () => {
   return (
     <div>
     <div>Vítejte na domovské stránce!</div>
-
+    
     {user.role == 'citizen'
     &&
     <div>Chcete nahlásit závadu? 

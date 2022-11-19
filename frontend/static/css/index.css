@@ -3,15 +3,13 @@ html, body {
 }
 
 .header {
-    background-color: #1e81b0;
+    background-color: #2074d4;
     display: flex;
-    color: #eeeee4;
+    color: white;
     align-items: center;
     gap: 30px;
     padding-left: 10px;
     margin-bottom: 10px;
-    border-radius:  10px;
-
 }
 
 .button {
@@ -25,7 +23,7 @@ header-button-log {
 
 .onclicke {
     text-decoration: underline;
-    color: blue;
+    color: white;
 }
 
 
@@ -46,4 +44,12 @@ input {
 
 .signup-login { 
     margin-top: 50px;
+}
+
+.signup--text-1 {
+    padding: 40px 0px 20px 10px;
+}
+
+.signup--button-submit {
+    padding: 40px 0px 20px 10px;
 }

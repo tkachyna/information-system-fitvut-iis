@@ -53,12 +53,12 @@ def getRoutes(request):
 
 @api_view(['POST'])
 def regUser(request):
-    print("User logged")
-    if request.method == 'POST':    
-        print("User logged")
-        data = json.loads(request.body)
-        print(data['password'])
-        user = User.objects.create_user(username=data['user'],
-                              email=data['email'],
-                              password=data['password'])
-        return HttpResponse()
+    data = json.loads(request.body)
+    user = User.objects.create_user(
+                            username=data['user'],
+                            email=data['email'],
+                            password=data['password'],
+                            city=['city'],
+                            street=['street'],
+                            house_number=['house_number'])
+    return HttpResponse()
