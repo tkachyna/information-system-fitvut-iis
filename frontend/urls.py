@@ -5,5 +5,8 @@ urlpatterns = [
     path('login', index ),
     path('homep', index ),
     path('reportfailure', index),
+    path('listoffailures', index),
     path('signup', index),
+    path('servicerequests', index),
+    path('editaccount', index)
 ]

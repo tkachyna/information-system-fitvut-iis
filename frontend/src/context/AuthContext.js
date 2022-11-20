@@ -38,10 +38,10 @@ export const AuthProvider = ({children}) => {
 
 
     let logoutUser = () => {
+        history('/')
         setAuthTokens(null)
         setUser(null)
         localStorage.removeItem('authTokens')
-
     }
 
 

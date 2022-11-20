@@ -12,7 +12,7 @@ const HomePage = () => {
   let style = {
     width: 250,
     height: 40,
-    mb: 4,
+    mb: 2,
     ml: 2
   } 
 
@@ -25,9 +25,24 @@ const HomePage = () => {
     &&
     <div>
     <Button  href='/reportfailure' type="submit" variant="outlined" sx = {style} >Nahlásit závadu</Button> 
+    <br/>
+    <Button  href='/listoffailures' type="submit" variant="outlined" sx = {style} >Zobrazit nahlášené závady</Button> 
     </div>
     }
+    {user.role == 'tech'
+    &&
+    <div>
+    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Servisní požadavky</Button> 
+    <br/>
+    <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
     </div>
+    }
+    {user.role == 'admin'
+    && 
+    <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
+    }
+    </div>
+
   )
 
 }
