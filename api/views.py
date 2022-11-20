@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
+from django.utils import timezone
 # Create your views here.
 
 from rest_framework import status
@@ -81,7 +82,7 @@ def createTicket(request):
     ticket = Ticket.sa
     data = json.loads(request.body)
     # print(data['text'])
-    test = ticket(description=data['description'], name="Name", state="working_on", customer_id_id=4, admin_id_id=3)
+    test = ticket(description=data['description'], name="Name", state="working_on", customer_id=4, admin_id=3, creation_date_time=timezone.now())
     # print(test.description)
     session.add(test)
     session.commit()
