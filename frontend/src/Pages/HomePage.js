@@ -34,9 +34,13 @@ const HomePage = () => {
     <div>
     <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Servisní požadavky</Button> 
     <br/>
+    <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
     </div>
     }
-   
+    {user.role == 'admin'
+    && 
+    <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
+    }
     </div>
 
   )

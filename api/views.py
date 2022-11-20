@@ -14,13 +14,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from stack_data import Serializer
 
 import json
-from .serializers import ModelSerializer, TicketSerializer
+from .serializers import ModelSerializer, TicketSerializer, UserSerializer
 from .models import Ticket, User
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 #make entities available as SQLAlchemy models
-
+User = User.sa
 # listing view for testing queries
 
 
@@ -60,6 +60,7 @@ def getRoutes(request):
 
 @api_view(['POST'])
 def regUser(request):
+    from .models import User
     data = json.loads(request.body)
     user = User.objects.create_user(
                             username=data['user'],
@@ -72,6 +73,33 @@ def regUser(request):
                             phone_number=data['phone_number'])
     return HttpResponse()
 
+@api_view(['POST'])
+def getUserID(request):
+    
+    data = json.loads(request.body)
+    print(data['id'])
+    db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
+    stmt = select(User).where(User.id == data['id'])
+    result = session.execute(stmt).all()
+    print(result[0])
+    a = result[0][0]
+    serializer = UserSerializer(a)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def changeUserInfo(request):
+    data = json.loads(request.body)
+    owner = request.user
+    owner.username = data['user']
+    owner.email = data['email']
+    owner.city = data['city']
+    owner.street = data['street']
+    owner.zipcode = data['zipcode']
+    owner.phone_number = data['phone_number']
+    owner.save()
+    return HttpResponse()
 
 @api_view(['POST'])
 def createTicket(request):

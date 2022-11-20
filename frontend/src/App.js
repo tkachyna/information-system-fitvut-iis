@@ -10,6 +10,7 @@ import AuthContext, { AuthProvider } from './context/AuthContext'
 import SignupPage from "./Pages/SignupPage";
 import FailuresPage from "./Pages/FailuresPage";
 import ListOfTasksPage from "./Pages/ListOfTasksPage";
+import EditAccountPage from "./Pages/EditAccountPage";
 
 function PrivateRoute({children}) {
   let {user} = useContext(AuthContext)
@@ -30,6 +31,7 @@ function App () {
             <Routes>
             <Route  path="/reportfailure" element={<ReportFailure />}/>
             <Route  path="/listoffailures" element={<FailuresPage />}/>
+            <Route  path="/editaccount" element={<EditAccountPage />}/>
             <Route  path="/servicerequests" element={<ListOfTasksPage />}/>
             <Route  path="/*" element={<PrivateRoute> <HomePage /> </PrivateRoute>}/>
             <Route  path="/signup" element={<SignupPage/>}/>

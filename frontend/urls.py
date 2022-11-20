@@ -7,5 +7,6 @@ urlpatterns = [
     path('reportfailure', index),
     path('listoffailures', index),
     path('signup', index),
-    path('servicerequests', index)
+    path('servicerequests', index),
+    path('editaccount', index)
 ]
