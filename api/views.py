@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 # Create your views here.
 
+from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from stack_data import Serializer
@@ -14,9 +15,14 @@ from stack_data import Serializer
 import json
 from .serializers import ModelSerializer, TicketSerializer
 from .models import Ticket, User
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 #make entities available as SQLAlchemy models
 
 # listing view for testing queries
+
+
 def listing(request):
     data = {
         "users" : User.query().filter(User.role == 1),
@@ -64,3 +70,24 @@ def regUser(request):
                             zipcode=data['zipcode'],
                             phone_number=data['phone_number'])
     return HttpResponse()
+
+
+@api_view(['POST'])
+def createTicket(request):
+    db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+
+    session = Session()
+    ticket = Ticket.sa
+    data = json.loads(request.body)
+    # print(data['text'])
+    test = ticket(description=data['description'], name="Name", state="working_on", customer_id_id=4, admin_id_id=3)
+    # print(test.description)
+    session.add(test)
+    session.commit()
+
+    # tickets = ticket.query().all()
+    # print(tickets)
+    test_as_dic = {c.name: getattr(test, c.name) for c in ticket.__table__.columns}
+    # print(test_as_dic)
+    return Response(data=test_as_dic, status=status.HTTP_200_OK)
