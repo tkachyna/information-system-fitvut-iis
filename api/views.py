@@ -15,18 +15,23 @@ from stack_data import Serializer
 
 import json
 from .serializers import ModelSerializer, TicketSerializer
-from .models import Ticket, User
+from .models import Ticket, User, TicketComment
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-#make entities available as SQLAlchemy models
+
+
+# make entities available as SQLAlchemy models
 
 # listing view for testing queries
 
+db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+Session = sessionmaker(bind=db)
+session = Session()
 
 def listing(request):
     data = {
-        "users" : User.query().filter(User.role == 1),
+        "users": User.query().filter(User.role == 1),
     }
 
     return render(request, "listing.html", data)
@@ -45,6 +50,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return token
 
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -62,33 +68,85 @@ def getRoutes(request):
 def regUser(request):
     data = json.loads(request.body)
     user = User.objects.create_user(
-                            username=data['user'],
-                            email=data['email'],
-                            password=data['password'],
-                            city=data['city'],
-                            street=data['street'],
-                            house_number=data['house_number'],
-                            zipcode=data['zipcode'],
-                            phone_number=data['phone_number'])
+        username=data['user'],
+        email=data['email'],
+        password=data['password'],
+        city=data['city'],
+        street=data['street'],
+        house_number=data['house_number'],
+        zipcode=data['zipcode'],
+        phone_number=data['phone_number'])
     return HttpResponse()
 
 
 @api_view(['POST'])
 def createTicket(request):
-    db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
+  #  db = create_engine(
+   #     "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+   # Session = sessionmaker(bind=db)
 
-    session = Session()
+    #session = Session()
     ticket = Ticket.sa
     data = json.loads(request.body)
-    # print(data['text'])
-    test = ticket(description=data['description'], name="Name", state="working_on", customer_id=4, admin_id=3, creation_date_time=timezone.now())
-    # print(test.description)
-    session.add(test)
-    session.commit()
 
-    # tickets = ticket.query().all()
-    # print(tickets)
-    test_as_dic = {c.name: getattr(test, c.name) for c in ticket.__table__.columns}
-    # print(test_as_dic)
-    return Response(data=test_as_dic, status=status.HTTP_200_OK)
+    user = User.sa
+    u = user.query().filter(user.id == data['id'])
+    print(type(u))
+    if u.count() == 0:
+        return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
+    if u[0].role != 1:
+        return Response(data={'User is not citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # print(data['text'])
+    try:
+        # kontrola, ze je customer citizen a admin spravce??
+        test = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=3,
+                      creation_date_time=timezone.now())
+        # print(test.description)
+        session.add(test)
+        session.commit()
+
+        # tickets = ticket.query().all()
+        # print(tickets)
+        test_as_dic = {c.name: getattr(test, c.name) for c in ticket.__table__.columns}
+        # print(test_as_dic)
+        return Response(data=test_as_dic, status=status.HTTP_200_OK)
+    except:
+        return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# @api_view(['GET'])
+# def getTickets(request):
+
+# @api_view(['GET'])
+# def getMyTickets(request)
+
+# @api_view(['POST'])
+# def editMyInfo(request)
+
+@api_view(['POST'])
+def postTicketComment(request):
+    ticket_comment = TicketComment.sa
+    user = User.sa
+    ticket = Ticket.sa
+
+
+    data = json.loads(request.body)
+    u = user.query().filter(user.id == data['author_id'])
+    if u.count() == 0:
+        #session.close()
+        return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
+
+    t = ticket.query().filter(ticket.id == data['ticket_id'])
+    if t.count() == 0:
+        #session.close()
+        return Response(data={'Incorrect ticket'}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        tc = ticket_comment(ticket_id=data['ticket_id'], text=data['text'], creation_date_time=timezone.now(),
+                            author_id=data['author_id'])
+        session.add(tc)
+        session.commit()
+        serialized = {c.name: getattr(tc, c.name) for c in ticket_comment.__table__.columns}
+        return Response(data=serialized, status=status.HTTP_200_OK)
+    except:
+        return Response(data={'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
