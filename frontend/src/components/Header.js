@@ -15,12 +15,12 @@ const Header = () => {
     return (
       <div className='header'>
         < h2>{" >> Informační systém správy závad"}</h2>
-        
-        <Link to="/" >Home</Link>
-        {user && <p className='onclicke' onClick={logoutUser}>Logout</p>}
-        {!user && <Link to="/login">Login</Link>}
-   
-        
+      
+        <Link className='header--button' to="/" >Home</Link>
+        {user && <div className='header--button' onClick={logoutUser}>Logout</div>}
+        {!user && <Link className='header--button' to="/login">Login</Link>}
+        {user && <div className='header--loggedas'>Jsi aktuálně přihlášen jako "{user.username}", tvoje role je "{user.role}"</div>}
+        <Link className='header--button-about' >About</Link>
 
       </div>
     )

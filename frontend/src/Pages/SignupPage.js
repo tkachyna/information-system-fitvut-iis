@@ -62,7 +62,9 @@ const SignupPage = () =>  {
             email: formData.email2,
             city:formData.city,
             street: formData.street,
-            house_number: formData.housenum
+            house_number: formData.housenum,
+            zipcode: formData.zipcode,
+            phone_number: formData.phone
           })
       })
     }
@@ -75,7 +77,8 @@ const SignupPage = () =>  {
   let style = {
     width: 250,
     height: 40,
-    m: 1,
+    mb: 4,
+    ml: 2
   } 
 
   return (
@@ -102,7 +105,7 @@ const SignupPage = () =>  {
             value={formData.email2}
           />
           <br/>
-          <div className='signup--text-1' >Řekněte nám o sobě trochu víc ...</div>
+          <div className='signup--text-2' >Řekněte nám o sobě trochu víc ...</div>
           <br/>
           <TextField  id="outlined-basic" label='Město' variant="outlined" type="text" placeholder='Město' sx = {style}  
             name="city" 
@@ -134,22 +137,16 @@ const SignupPage = () =>  {
 
             onClick={getUserInfo} 
             variant="contained"
-            sx = {{
-              width: 250,
-              height: 40,
-              ml: 1,
-              mt: 4,
-            }}
+            sx = {style}
             >Potvrdit</Button>
       </form>
       
-      <div className='signup-login'>
-      <div className='signup--text-1'>
+      <div className='signup--text-2'>
         Máte již účet? Přihlaste se 
       <Link to="/login"> zde.</Link>
       </div>
-      {signedUp && <div className='signup--text-1'>Byli jste úspěšně zaregistrování!</div>}
-      </div> 
+      {signedUp && <div className='signup--text-2'>Byli jste úspěšně zaregistrování!</div>}
+
     </div>
   )
   

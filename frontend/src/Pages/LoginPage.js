@@ -29,7 +29,7 @@ const LoginPage = () =>  {
           <Button  type="submit" variant="contained" sx = {style}>Přihlásit se</Button>
           <br/>
       </form>
-      <div className='signup--text-1'>Nemáte ještě účet? <Link to="/signup">Zaregistrujte se.</Link></div>
+      <div className='signup--text-2'>Nemáte ještě účet? <a href="/signup">Zaregistrujte se.</a></div>
       
     </div>
   )

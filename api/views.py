@@ -58,7 +58,9 @@ def regUser(request):
                             username=data['user'],
                             email=data['email'],
                             password=data['password'],
-                            city=['city'],
-                            street=['street'],
-                            house_number=['house_number'])
+                            city=data['city'],
+                            street=data['street'],
+                            house_number=data['house_number'],
+                            zipcode=data['zipcode'],
+                            phone_number=data['phone_number'])
     return HttpResponse()

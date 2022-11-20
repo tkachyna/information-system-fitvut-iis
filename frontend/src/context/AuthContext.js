@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { createContext, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, redirect } from 'react-router-dom';
 
 const AuthContext = createContext()
 
@@ -29,7 +29,8 @@ export const AuthProvider = ({children}) => {
             setAuthTokens(data)
             setUser(jwtDecode(data.access))
             localStorage.setItem('authTokens', JSON.stringify(data))
-            history.apply('/')
+            history('/')
+   
         }else{
             alert('Something went wrong!')
         }
@@ -40,7 +41,7 @@ export const AuthProvider = ({children}) => {
         setAuthTokens(null)
         setUser(null)
         localStorage.removeItem('authTokens')
-        history.apply('/login')
+
     }
 
 
