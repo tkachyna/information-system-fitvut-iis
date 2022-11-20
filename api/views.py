@@ -40,7 +40,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['username'] = user.username
         token['password'] = user.password
-        token['role'] = 'admin' if user.username == 'admin' else 'citizen'
+        token['role'] = 'admin' if user.username == 'admin' else 'tech'
         # ...
 
         return token
