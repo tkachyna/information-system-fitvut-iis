@@ -25,9 +25,7 @@ from sqlalchemy.orm import sessionmaker
 
 # listing view for testing queries
 
-db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-Session = sessionmaker(bind=db)
-session = Session()
+
 
 def listing(request):
     data = {
@@ -81,20 +79,21 @@ def regUser(request):
 
 @api_view(['POST'])
 def createTicket(request):
-  #  db = create_engine(
-   #     "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-   # Session = sessionmaker(bind=db)
-
-    #session = Session()
+    db = create_engine(
+        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
     ticket = Ticket.sa
     data = json.loads(request.body)
 
     user = User.sa
-    u = user.query().filter(user.id == data['id'])
+    u = session.query(user).filter(user.id == data['id'])
     print(type(u))
     if u.count() == 0:
+        db.dispose()
         return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
     if u[0].role != 1:
+        db.dispose()
         return Response(data={'User is not citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
 
     # print(data['text'])
@@ -110,8 +109,10 @@ def createTicket(request):
         # print(tickets)
         test_as_dic = {c.name: getattr(test, c.name) for c in ticket.__table__.columns}
         # print(test_as_dic)
+        db.dispose()
         return Response(data=test_as_dic, status=status.HTTP_200_OK)
     except:
+        db.dispose()
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -130,23 +131,30 @@ def postTicketComment(request):
     user = User.sa
     ticket = Ticket.sa
 
-
+    db = create_engine(
+        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
     data = json.loads(request.body)
-    u = user.query().filter(user.id == data['author_id'])
+    u = session.query(user).filter(user.id == data['author_id'])
     if u.count() == 0:
         #session.close()
+        db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
 
-    t = ticket.query().filter(ticket.id == data['ticket_id'])
+    t = session.query(ticket).filter(ticket.id == data['ticket_id'])
     if t.count() == 0:
         #session.close()
+        db.dispose()
         return Response(data={'Incorrect ticket'}, status=status.HTTP_400_BAD_REQUEST)
     try:
         tc = ticket_comment(ticket_id=data['ticket_id'], text=data['text'], creation_date_time=timezone.now(),
                             author_id=data['author_id'])
         session.add(tc)
+        db.dispose()
         session.commit()
         serialized = {c.name: getattr(tc, c.name) for c in ticket_comment.__table__.columns}
         return Response(data=serialized, status=status.HTTP_200_OK)
     except:
+        db.dispose()
         return Response(data={'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
