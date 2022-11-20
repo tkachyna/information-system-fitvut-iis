@@ -17,7 +17,7 @@ const Header = () => {
         < h2>{" >> Informační systém správy závad"}</h2>
       
         <Link className='header--button' to="/" >Home</Link>
-        {user && <div className='header--button' onClick={logoutUser}>Logout</div>}
+        {user && <a  className='header--button' onClick={logoutUser}>Logout</a>}
         {!user && <Link className='header--button' to="/login">Login</Link>}
         {user && <div className='header--loggedas'>Jsi aktuálně přihlášen jako "{user.username}", tvoje role je "{user.role}"</div>}
         <Link className='header--button-about' >About</Link>
