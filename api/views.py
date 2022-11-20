@@ -86,6 +86,7 @@ def getUserID(request):
     print(result[0])
     a = result[0][0]
     serializer = UserSerializer(a)
+    db.dispose()
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -114,6 +115,7 @@ def createTicket(request):
     # print(test.description)
     session.add(test)
     session.commit()
+
 
     # tickets = ticket.query().all()
     # print(tickets)
