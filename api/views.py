@@ -110,8 +110,8 @@ def createTicket(request):
     ticket = Ticket.sa
     data = json.loads(request.body)
 
-    user = User.sa
-    u = session.query(user).filter(user.id == data['id'])
+    # user = User.sa
+    u = session.query(User).filter(User.id == data['id'])
     print(type(u))
     if u.count() == 0:
         db.dispose()
@@ -152,7 +152,7 @@ def createTicket(request):
 @api_view(['POST'])
 def postTicketComment(request):
     ticket_comment = TicketComment.sa
-    user = User.sa
+    # user = User.sa
     ticket = Ticket.sa
 
     db = create_engine(
@@ -160,7 +160,7 @@ def postTicketComment(request):
     Session = sessionmaker(bind=db)
     session = Session()
     data = json.loads(request.body)
-    u = session.query(user).filter(user.id == data['author_id'])
+    u = session.query(User).filter(User.id == data['author_id'])
     if u.count() == 0:
         #session.close()
         db.dispose()
