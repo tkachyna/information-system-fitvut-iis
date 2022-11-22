@@ -15,7 +15,7 @@ from stack_data import Serializer
 
 import json
 from .serializers import ModelSerializer, TicketSerializer, UserSerializer
-from .models import Ticket, User, TicketComment, Request, RequestComment
+from .models import Ticket, User, TicketComment, Request, RequestComment, Picture
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
@@ -109,7 +109,7 @@ def createTicket(request):
     session = Session()
     ticket = Ticket.sa
     data = json.loads(request.body)
-
+    url = data['url']
     # user = User.sa
     u = session.query(User).filter(User.id == data['id'])
     print(type(u))
@@ -123,18 +123,28 @@ def createTicket(request):
     # print(data['text'])
     try:
         # kontrola, ze je customer citizen a admin spravce??
-        test = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=3,
+        new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=3,
                       creation_date_time=timezone.now())
-        # print(test.description)
-        session.add(test)
+        # print(new_ticket.description)
+        session.add(new_ticket)
         session.commit()
+        if url != "":
+            picture = Picture.sa
+            try:
+                p = picture(ticket_id=new_ticket.id, url=url)
+                session.add(p)
+                session.commit()
+            except:
+                db.dispose()
+                return Response("Invalid url", status=status.HTTP_400_BAD_REQUEST)
+
 
         # tickets = ticket.query().all()
         # print(tickets)
-        test_as_dic = {c.name: getattr(test, c.name) for c in ticket.__table__.columns}
+        data = {c.name: getattr(new_ticket, c.name) for c in ticket.__table__.columns}
         # print(test_as_dic)
         db.dispose()
-        return Response(data=test_as_dic, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_200_OK)
     except:
         db.dispose()
         return Response(data={'Incorrect data'}, status=status.HTTP_400_BAD_REQUEST)
@@ -159,17 +169,17 @@ def getMyTickets(request):
 
 @api_view(['GET'])
 def getTicket(request):
-    print("fffff")
     ticket = Ticket.sa
     params = request.query_params.dict()
     id = params['id']
-    t = ticket.query().filter(ticket.id == id)[0]
-    data = {c.name: getattr(t, c.name) for c in ticket.__table__.columns}
-    print(data)
-    return Response(data=data, status=status.HTTP_200_OK)
+    try:
+        t = ticket.query().filter(ticket.id == id)[0]
+        data = {c.name: getattr(t, c.name) for c in ticket.__table__.columns}
+        return Response(data=data, status=status.HTTP_200_OK)
+    except:
+        return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['POST'])
-# def editTicket(request)
+
 
 @api_view(['POST'])
 def postTicketComment(request):
@@ -316,21 +326,6 @@ def editRequest(request):
         db.dispose()
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
 
-
-@api_view(['POST'])
-def getRequestID(request):
-    db = create_engine(
-        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
-    req = Request.sa
-    data = json.loads(request.body)
-    r = session.query(req).filter(req.id == data['id'])
-    print(r[0])
-    r_serialized = {c.name: getattr(r[0], c.name) for c in req.__table__.columns}
-    db.dispose()
-    return Response(data=r_serialized, status=status.HTTP_200_OK)
-
 @api_view(['GET'])
 def getMyRequests(request):
     req = Request.sa
@@ -340,7 +335,6 @@ def getMyRequests(request):
     data = [{c.name: getattr(x, c.name) for c in req.__table__.columns} for x in reqs]
     return Response(data=data, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
 def getRequest(request):
     req = Request.sa
     params = request.query_params.dict()
