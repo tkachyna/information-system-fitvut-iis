@@ -15,7 +15,7 @@ from stack_data import Serializer
 
 import json
 from .serializers import ModelSerializer, TicketSerializer, UserSerializer
-from .models import Ticket, User, TicketComment, Request, RequestComment
+from .models import Ticket, User, TicketComment, Request, RequestComment, Picture
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
@@ -109,7 +109,7 @@ def createTicket(request):
     session = Session()
     ticket = Ticket.sa
     data = json.loads(request.body)
-
+    url = data['url']
     # user = User.sa
     u = session.query(User).filter(User.id == data['id'])
     print(type(u))
@@ -123,18 +123,28 @@ def createTicket(request):
     # print(data['text'])
     try:
         # kontrola, ze je customer citizen a admin spravce??
-        test = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=3,
+        new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=3,
                       creation_date_time=timezone.now())
-        # print(test.description)
-        session.add(test)
+        # print(new_ticket.description)
+        session.add(new_ticket)
         session.commit()
+        if url != "":
+            picture = Picture.sa
+            try:
+                p = picture(ticket_id=new_ticket.id, url=url)
+                session.add(p)
+                session.commit()
+            except:
+                db.dispose()
+                return Response("Invalid url", status=status.HTTP_400_BAD_REQUEST)
+
 
         # tickets = ticket.query().all()
         # print(tickets)
-        test_as_dic = {c.name: getattr(test, c.name) for c in ticket.__table__.columns}
+        data = {c.name: getattr(new_ticket, c.name) for c in ticket.__table__.columns}
         # print(test_as_dic)
         db.dispose()
-        return Response(data=test_as_dic, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_200_OK)
     except:
         db.dispose()
         return Response(data={'Incorrect data'}, status=status.HTTP_400_BAD_REQUEST)
@@ -162,12 +172,14 @@ def getTicket(request):
     ticket = Ticket.sa
     params = request.query_params.dict()
     id = params['id']
-    t = ticket.query().filter(ticket.id == id)[0]
-    data = {c.name: getattr(t, c.name) for c in ticket.__table__.columns}
-    return Response(data=data, status=status.HTTP_200_OK)
+    try:
+        t = ticket.query().filter(ticket.id == id)[0]
+        data = {c.name: getattr(t, c.name) for c in ticket.__table__.columns}
+        return Response(data=data, status=status.HTTP_200_OK)
+    except:
+        return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['POST'])
-# def editTicket(request)
+
 
 @api_view(['POST'])
 def postTicketComment(request):
