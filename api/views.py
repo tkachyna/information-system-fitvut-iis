@@ -137,7 +137,7 @@ def createTicket(request):
         return Response(data=test_as_dic, status=status.HTTP_200_OK)
     except:
         db.dispose()
-        return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={'Incorrect data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -145,17 +145,17 @@ def getTickets(request):
     ticket = Ticket.sa
     tickets = ticket.query().all()
     data = [{c.name: getattr(x, c.name) for c in ticket.__table__.columns} for x in tickets]
-    print(data)
     return Response(data=data, status=status.HTTP_200_OK)
 
 
-
-#@api_view(['GET'])
-#def getMyTickets(request):
- #   ticket = Ticket.sa
-  #  data = request.body
-   # id = data['id']
-    #tickets =
+@api_view(['GET'])
+def getMyTickets(request):
+    ticket = Ticket.sa
+    params = request.query_params.dict()
+    id = params['id']
+    tickets = ticket.query().filter(ticket.customer_id == id)
+    data = [{c.name: getattr(x, c.name) for c in ticket.__table__.columns} for x in tickets]
+    return Response(data=data, status=status.HTTP_200_OK)
 
 # @api_view(['POST'])
 # def editTicket(request)
