@@ -327,16 +327,23 @@ def editRequest(request):
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
-def getRequestID(request):
-    db = create_engine(
-        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+@api_view(['GET'])
+def getMyRequests(request):
     req = Request.sa
-    data = json.loads(request.body)
-    r = session.query(req).filter(req.id == data['id'])
-    print(r[0])
-    r_serialized = {c.name: getattr(r[0], c.name) for c in req.__table__.columns}
-    db.dispose()
-    return Response(data=r_serialized, status=status.HTTP_200_OK)
+    params = req.query_params.dict()
+    id = params['id']
+    reqs = req.query().filter(req.customer_id == id)
+    data = [{c.name: getattr(x, c.name) for c in req.__table__.columns} for x in reqs]
+    return Response(data=data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getRequest(request):
+    req = Request.sa
+    params = request.query_params.dict()
+    id = params['id']
+    try:
+        r = req.query().filter(req.id == id)[0]
+        data = {c.name: getattr(r, c.name) for c in req.__table__.columns}
+        return Response(data=data, status=status.HTTP_200_OK)
+    except:
+        return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
