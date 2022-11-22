@@ -11,6 +11,7 @@ const HomePage = () => {
   let style = {
     width: 400,
     height: 40,
+    borderRadius: 28,
     mb: 2,
     ml: 2
   } 

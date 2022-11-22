@@ -90,20 +90,22 @@ a:link, a:visited {
     margin-bottom: 16px;
     outline-style: solid;
     outline-width: 1px;
-    outline-color: black;
+    padding: 15px 15px 15px 0;
+    outline-color: rgb(142, 142, 142);
     width: 500px;
 
-    border-radius: 3px;
+    border-radius: 10px;
     margin-left: 16px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     overflow: hidden;
 }
 
 .ticket--text {
     margin: 0 5px 5px 16px;
+    
     width: 320px;
     float:left; 
-    color:#D48020
+    color:#2074d4
 }
 
 .ticket--button {
