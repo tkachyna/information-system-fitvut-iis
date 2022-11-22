@@ -1,14 +1,18 @@
 import PropTypes from 'prop-types'
 import React, { Component, useContext } from 'react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Button from '@mui/material/Button'
 import AuthContext from '../context/AuthContext'
+import HomeIcon from '@mui/icons-material/Home';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import LogoutIcon from '@mui/icons-material/Logout';
+import InfoIcon from '@mui/icons-material/Info';
+import LoginIcon from '@mui/icons-material/Login';
 
 const Header = () => {
 
   let {user, logoutUser} = useContext(AuthContext)
-
+  let navigate = useNavigate()
     let userRole = {
       1: "obyvatel",
       2: "servisní technik",
@@ -19,11 +23,13 @@ const Header = () => {
     return (
       <div className='header'>
         <h2> {"Informační systém správy závad"}</h2>
-        <Link className='header--button' to="/" >Home</Link>
-        {user && <a  className='header--button' onClick={logoutUser}>Logout</a>}
-        {!user && <Link className='header--button' to="/login">Login</Link>}
-        {user && <div className='header--loggedas'>Jsi aktuálně přihlášen jako "{user.username}", tvoje role je <ln style={{color: "#D48020"}}>{userRole[user.role]}</ln></div>}
-        <Link className='header--button-about' >About</Link>
+        <HomeIcon onClick={() => navigate('/')}>Home</HomeIcon>
+        {user && <LogoutIcon onClick={logoutUser}>Logout</LogoutIcon>}
+        {!user && <LoginIcon onClick={() => navigate('/login')}/>}
+        {user && <div className='header--loggedas'>Jsi aktuálně přihlášen jako "{user.username}", tvoje role je <ln style={{colorStyle: "bold"}}>{userRole[user.role]}</ln></div>}
+        
+        <InfoIcon className='header--button-about'/>
+ 
 
       </div>
     )
