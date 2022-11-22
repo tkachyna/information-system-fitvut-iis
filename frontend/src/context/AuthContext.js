@@ -1,6 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import { createContext, useState, useEffect } from 'react'
 import { useNavigate, redirect } from 'react-router-dom';
+import { Alert } from '@mui/material';
 
 const AuthContext = createContext()
 
@@ -29,10 +30,12 @@ export const AuthProvider = ({children}) => {
             setAuthTokens(data)
             setUser(jwtDecode(data.access))
             localStorage.setItem('authTokens', JSON.stringify(data))
-            history('/')
+            history('/');
+            <Alert severity='success'>Úspěšně přihlášen</Alert>
+
    
         }else{
-            alert('Something went wrong!')
+            <Alert severity='error'>Špatně zadané uživatelské jméno nebo heslo</Alert>
         }
     }
 

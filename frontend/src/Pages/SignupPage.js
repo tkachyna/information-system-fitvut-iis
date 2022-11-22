@@ -68,10 +68,7 @@ const SignupPage = () =>  {
           })
       })
     }
-
-    setSignedUp(state => !state)
-
-    
+    setSignedUp(state => !state)  
   }
 
   let style = {
@@ -84,22 +81,22 @@ const SignupPage = () =>  {
   return (
     <div className='form-signup'>
       <form>
-          <TextField id="outlined-basic" label='Uživatelské jméno' variant="outlined" placeholder='Uživatelské jméno' sx = {style}
+          <TextField required id="outlined-basic" label='Uživatelské jméno' variant="outlined" placeholder='Uživatelské jméno' sx = {style}
             onChange={handleChange}
             name="username"
             value={formData.username}
           />
-          <TextField id="outlined-basic" label='Heslo' variant="outlined" type="password" placeholder='Heslo' sx = {style}
+          <TextField required id="outlined-basic" label='Heslo' variant="outlined" type="password" placeholder='Heslo' sx = {style}
             name="password2" 
             onChange={handleChange}
             value={formData.password2}
           />
-          <TextField id="outlined-basic" label='Heslo znovu' variant="outlined" type="password" placeholder='Heslo znovu' sx = {style}
+          <TextField required id="outlined-basic" label='Heslo znovu' variant="outlined" type="password" placeholder='Heslo znovu' sx = {style}
             name="password2check"   
             onChange={handleChange}
             value={formData.password2check}
           />
-          <TextField id="outlined-basic" label='Email' variant="outlined" type="email" placeholder="Email" sx = {style}
+          <TextField required id="outlined-basic" label='Email' variant="outlined" type="email" placeholder="Email" sx = {style}
             name="email2"
             onChange={handleChange} 
             value={formData.email2}

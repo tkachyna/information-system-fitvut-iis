@@ -40,7 +40,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['username'] = user.username
         token['password'] = user.password
-        token['role'] = 'admin' if user.username == 'admin' else 'tech'
+        token['role'] = user.role
         # ...
 
         return token
@@ -159,11 +159,13 @@ def getMyTickets(request):
 
 @api_view(['GET'])
 def getTicket(request):
+    print("fffff")
     ticket = Ticket.sa
     params = request.query_params.dict()
     id = params['id']
     t = ticket.query().filter(ticket.id == id)[0]
     data = {c.name: getattr(t, c.name) for c in ticket.__table__.columns}
+    print(data)
     return Response(data=data, status=status.HTTP_200_OK)
 
 # @api_view(['POST'])
@@ -328,3 +330,24 @@ def getRequestID(request):
     r_serialized = {c.name: getattr(r[0], c.name) for c in req.__table__.columns}
     db.dispose()
     return Response(data=r_serialized, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getMyRequests(request):
+    req = Request.sa
+    params = req.query_params.dict()
+    id = params['id']
+    reqs = req.query().filter(req.customer_id == id)
+    data = [{c.name: getattr(x, c.name) for c in req.__table__.columns} for x in reqs]
+    return Response(data=data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getRequest(request):
+    req = Request.sa
+    params = request.query_params.dict()
+    id = params['id']
+    try:
+        r = req.query().filter(req.id == id)[0]
+        data = {c.name: getattr(r, c.name) for c in req.__table__.columns}
+        return Response(data=data, status=status.HTTP_200_OK)
+    except:
+        return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)

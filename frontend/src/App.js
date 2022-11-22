@@ -8,9 +8,11 @@ import LoginPage from "./Pages/LoginPage";
 import Header from "./components/Header";
 import AuthContext, { AuthProvider } from './context/AuthContext'
 import SignupPage from "./Pages/SignupPage";
-import FailuresPage from "./Pages/FailuresPage";
+import TicketsListPage  from "./Pages/TicketsListPage";
 import ListOfTasksPage from "./Pages/ListOfTasksPage";
 import EditAccountPage from "./Pages/EditAccountPage";
+import AddTechnicianPage from "./Pages/AddTechnicianPage";
+import TicketInfoPage from "./Pages/TicketInfoPage";
 
 function PrivateRoute({children}) {
   let {user} = useContext(AuthContext)
@@ -30,8 +32,10 @@ function App () {
             <Header/>
             <Routes>
             <Route  path="/reportfailure" element={<ReportFailure />}/>
-            <Route  path="/listoffailures" element={<FailuresPage />}/>
+            <Route  path="/addtechnician" element={<AddTechnicianPage />}/>
+            <Route  path="/listoffailures" element={<TicketsListPage  />}/>
             <Route  path="/editaccount" element={<EditAccountPage />}/>
+            <Route  path="/ticket" element={<TicketInfoPage />}/>
             <Route  path="/servicerequests" element={<ListOfTasksPage />}/>
             <Route  path="/*" element={<PrivateRoute> <HomePage /> </PrivateRoute>}/>
             <Route  path="/signup" element={<SignupPage/>}/>

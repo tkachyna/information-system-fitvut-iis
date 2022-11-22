@@ -8,5 +8,7 @@ urlpatterns = [
     path('listoffailures', index),
     path('signup', index),
     path('servicerequests', index),
-    path('editaccount', index)
+    path('editaccount', index),
+    path('addtechnician', index),
+    path('ticket', index),
 ]

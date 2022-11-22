@@ -1,5 +1,5 @@
 html, body {
-    font-family: 'Karla', sans-serif;
+    font-family: 'Trebuchet MS', sans-serif;
 }
 
 .header {
@@ -8,7 +8,7 @@ html, body {
     color: white;
     align-items: center;
     gap: 30px;
-    padding-left: 10px;
+    padding-left: 20px;
     margin-bottom: 10px;
 }
 
@@ -84,3 +84,92 @@ input {
 a:link, a:visited {
     color: #2074d4;
   }
+
+.ticket--wrapper {
+    display: block;
+    margin-bottom: 16px;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: black;
+    width: 500px;
+
+    border-radius: 3px;
+    margin-left: 16px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    overflow: hidden;
+}
+
+.ticket--text {
+    margin: 0 5px 5px 16px;
+    width: 320px;
+    float:left; 
+    color:#D48020
+}
+
+.ticket--button {
+    display: inline-block;
+    overflow: hidden;
+    margin-left: auto; 
+    margin-right: 0;
+    vertical-align: middle;
+}
+
+.reportticker--timer {
+    padding-left: 50px;
+    width: 200px;
+}
+
+.ticketinfopage--wrapper {
+    margin-left: 16px;
+}
+
+.ticketinfopage--header {
+    color: white;
+    background-color: #D48020;
+    height: 42px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+    margin-left: 5px;
+    border-radius: 3px;
+}
+
+.ticketinfopage--name {
+    color: #D48020;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #D48020;
+    height: 50px;
+    width: 370px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    font-size: medium;
+}
+
+.ticketinfopage--othertext {
+    font-size: medium;
+    background-color: #2074d4;
+    width: 70px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 5px;
+    margin: 0 5px 5px 0;
+
+}
+
+.ticketinfopage--icons-text {
+    margin-top: 40px;
+    margin-bottom: 5px;
+}
+
+.ticketinfopage--icons {
+    margin-right: 10px;
+    vertical-align: middle;
+}

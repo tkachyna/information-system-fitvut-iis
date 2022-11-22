@@ -18,18 +18,18 @@ const LoginPage = () =>  {
   return (
     <div>
       <form onSubmit={loginUser}>
-          <TextField 
+          <TextField required
             id="outlined-basic" label='Uživatelské jméno' variant="outlined" sx = {style}
             type="text" name="username" placeholder='Uživatelské jméno'/>
           <br/>
-          <TextField 
+          <TextField required
             id="outlined-basic" label='Heslo' variant="outlined" sx = {style}
             type="password" name="password" placeholder='Enter Password'/>
           <br/>
           <Button  type="submit" variant="contained" sx = {style}>Přihlásit se</Button>
           <br/>
       </form>
-      <div className='signup--text-2'>Nemáte ještě účet? <a href="/signup">Zaregistrujte se.</a></div>
+      <div className='signup--text-2'>Nemáte ještě účet? <Link to="/signup">Zaregistrujte se.</Link></div>
       
     </div>
   )
