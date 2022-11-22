@@ -157,6 +157,15 @@ def getMyTickets(request):
     data = [{c.name: getattr(x, c.name) for c in ticket.__table__.columns} for x in tickets]
     return Response(data=data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def getTicket(request):
+    ticket = Ticket.sa
+    params = request.query_params.dict()
+    id = params['id']
+    t = ticket.query().filter(ticket.id == id)[0]
+    data = {c.name: getattr(t, c.name) for c in ticket.__table__.columns}
+    return Response(data=data, status=status.HTTP_200_OK)
+
 # @api_view(['POST'])
 # def editTicket(request)
 
