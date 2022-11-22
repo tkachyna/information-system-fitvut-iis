@@ -228,8 +228,7 @@ def createRequest(request):
         return Response(data={'Assign valid ticket!!'}, status=status.HTTP_400_BAD_REQUEST)
     # technician assign check -not necessary?
     try:
-        r = req(description=data['description'], state=2, estimated_time=0, real_time=0, ticket_id=data['ticket_id'], creation_date_time=timezone.now())
-        print(r.description)
+        r = req(description=data['description'], state=1, estimated_time=0, real_time=0, ticket_id=data['ticket_id'], creation_date_time=timezone.now())
         session.add(r)
         session.commit()
 
@@ -277,3 +276,55 @@ def postRequestComment(request):
     except:
         db.dispose()
         return Response(data={'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def editRequest(request):
+    db = create_engine(
+        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
+    req = Request.sa
+    ticket = Ticket.sa
+    data = json.loads(request.body)
+    # valid user check
+    u = session.query(User).filter(User.id == data['author_id'])
+    if u.count() == 0:
+        # session.close()
+        db.dispose()
+        return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
+    if u[0].role != 4:  # change to manager (3)
+        # session.close()
+        db.dispose()
+        return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
+    # valid request check
+    r = session.query(req).filter(req.id == data['id'])
+    if r.count() == 0:
+        # session.close()
+        db.dispose()
+        return Response(data={'Incorrect request'}, status=status.HTTP_400_BAD_REQUEST)
+    # technician assign check -not necessary?
+    try:
+        session.query(req).filter(req.id == data['id']).update({"description": data['description'], "state": data['state'], "estimated_time": data['estimated_time'], "real_time": data['real_time'], "ticket_id":data['ticket_id']})
+        session.commit()
+        r = session.query(req).filter(req.id == data['id'])
+        r_serialized = {c.name: getattr(r[0], c.name) for c in req.__table__.columns}
+        db.dispose()
+        return Response(data=r_serialized, status=status.HTTP_200_OK)
+    except:
+        db.dispose()
+        return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def getRequestID(request):
+    db = create_engine(
+        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
+    req = Request.sa
+    data = json.loads(request.body)
+    r = session.query(req).filter(req.id == data['id'])
+    print(r[0])
+    r_serialized = {c.name: getattr(r[0], c.name) for c in req.__table__.columns}
+    db.dispose()
+    return Response(data=r_serialized, status=status.HTTP_200_OK)
