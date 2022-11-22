@@ -15,7 +15,7 @@ from stack_data import Serializer
 
 import json
 from .serializers import ModelSerializer, TicketSerializer, UserSerializer
-from .models import Ticket, User, TicketComment
+from .models import Ticket, User, TicketComment, Request, RequestComment
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
@@ -179,6 +179,81 @@ def postTicketComment(request):
         session.commit()
         serialized = {c.name: getattr(tc, c.name) for c in ticket_comment.__table__.columns}
         return Response(data=serialized, status=status.HTTP_200_OK)
+    except:
+        db.dispose()
+        return Response(data={'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def createRequest(request):
+    db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
+    req = Request.sa
+    ticket = Ticket.sa
+    data = json.loads(request.body)
+    # valid user check
+    u = session.query(User).filter(User.id == data['id'])
+    print(type(u))
+    if u.count() == 0:
+        db.dispose()
+        return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
+    if u[0].role != 4:  #manager
+        db.dispose()
+        return Response(data={'User is not manager!!'}, status=status.HTTP_400_BAD_REQUEST)
+    # valid ticket check
+    t = session.query(ticket).filter(ticket.id == data['ticket_id'])
+    if t.count() == 0:
+        db.dispose()
+        return Response(data={'Assign valid ticket!!'}, status=status.HTTP_400_BAD_REQUEST)
+    # technician assign check -not necessary?
+    try:
+        r = req(description=data['description'], state=2, estimated_time=0, real_time=0, ticket_id=data['ticket_id'], creation_date_time=timezone.now())
+        print(r.description)
+        session.add(r)
+        session.commit()
+
+        r_serialized = {c.name: getattr(r, c.name) for c in req.__table__.columns}
+        db.dispose()
+        return Response(data=r_serialized, status=status.HTTP_200_OK)
+    except:
+        db.dispose()
+        return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def postRequestComment(request):
+    db = create_engine(
+        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
+    data = json.loads(request.body)
+    req = Request.sa
+    request_comment = RequestComment.sa
+    # valid user check
+    u = session.query(User).filter(User.id == data['author_id'])
+    if u.count() == 0:
+        #session.close()
+        db.dispose()
+        return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
+    if u[0].role != 4:  #change to manager (3)
+        #session.close()
+        db.dispose()
+        return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
+    # valid request check
+    r = session.query(req).filter(req.id == data['request_id'])
+    if r.count() == 0:
+        #session.close()
+        db.dispose()
+        return Response(data={'Incorrect request'}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        rc = request_comment(request_id=data['request_id'], text=data['text'], creation_date_time=timezone.now(),
+                            author_id=data['author_id'])
+        session.add(rc)
+        db.dispose()
+        session.commit()
+        rc_serialized = {c.name: getattr(rc, c.name) for c in request_comment.__table__.columns}
+        return Response(data=rc_serialized, status=status.HTTP_200_OK)
     except:
         db.dispose()
         return Response(data={'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)

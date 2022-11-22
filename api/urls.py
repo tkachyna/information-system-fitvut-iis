@@ -16,5 +16,7 @@ urlpatterns = [
     path('createTicket', views.createTicket),
     path('commentTicket', views.postTicketComment),
     path('getUserID/', views.getUserID),
-    path('changeUserInfo/', views.changeUserInfo)
+    path('changeUserInfo/', views.changeUserInfo),
+    path('createRequest/', views.createRequest),
+    path('postRequestComment/', views.postRequestComment)
 ]
