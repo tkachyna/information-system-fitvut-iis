@@ -115,8 +115,7 @@ a:link, a:visited {
 }
 
 .reportticker--timer {
-    padding-left: 50px;
-    width: 200px;
+    margin-left: 16px;
 }
 
 .ticketinfopage--wrapper {

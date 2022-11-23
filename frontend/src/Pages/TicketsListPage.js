@@ -14,7 +14,7 @@ const TicketsListPage = () => {
     }, [])
     
     let getTickets = async() => {
-        let response = await fetch("api/getMyTickets?id=4", {
+        let response = await fetch(`api/getMyTickets?id=${user.user_id}`, {
             method: 'GET',
             headers:{
                 'Content-Type':'application/json',
