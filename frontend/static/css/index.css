@@ -124,28 +124,30 @@ a:link, a:visited {
 
 .ticketinfopage--header {
     color: white;
-    background-color: #D48020;
-    height: 42px;
-    width: 300px;
+    background-color: #2074d4;
+    height: 50px;
+    width: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: large;
-    margin-left: 5px;
-    border-radius: 3px;
+    margin-left: 16px;
+    margin-bottom: 10px;
+    border-radius: 10px;
 }
 
 .ticketinfopage--name {
-    color: #D48020;
+    color: #2074d4;
     border-width: 1px;
     border-style: solid;
-    border-color: #D48020;
+    border-color: #2074d4;
     height: 50px;
-    width: 370px;
+    width: 400px;
+    margin-left: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 3px;
+    border-radius: 10px;
     font-size: medium;
 }
 
@@ -201,15 +203,26 @@ a:link, a:visited {
     margin-right: 10px;
 }
 
-th {
+.user--table {
     width: 200px;
     text-align: left;
 }
 
-table {
+.user--cell {
     margin: 5px 0 5px 16px;
     border-radius: 5px;
     padding-left: 16px;
     height: 80px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.comment--table {
+    margin: 5px 0 5px 0px;
+}
+
+.comment--cell {
+    width: 400px;
+    text-align: left;
+    font-weight: 100;
+    font-size: 15px;
 }

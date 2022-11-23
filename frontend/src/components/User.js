@@ -34,12 +34,12 @@ const User = (props) => {
 
 
     return (
-        <table>
+        <table className='user--table'>
             <tbody>
             <tr>
-                <th style={{width: 50}}><AccountCircleIcon/></th>
-                <th>{props.user.username}</th>
-                <th>
+                <th className='user--cell' style={{width: 50}}><AccountCircleIcon/></th>
+                <th className='user--cell' >{props.user.username}</th>
+                <th className='user--cell'>
                 <Select
                     sx={{width: 200}}
                     labelId="state"

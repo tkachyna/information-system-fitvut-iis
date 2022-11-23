@@ -170,6 +170,7 @@ def getTicket(request):
     except:
         return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 def getTicketComments(request):
     ticket_comment = TicketComment.sa

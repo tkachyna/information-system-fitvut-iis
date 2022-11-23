@@ -12,6 +12,7 @@ import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import AddIcon from '@mui/icons-material/Add';
 import { Divider } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
+import Comment from '../components/Comment';
 
 const TicketInfoPage = () => {
 
@@ -23,7 +24,8 @@ const TicketInfoPage = () => {
 
     let {authTokens, logoutUser, user} = useContext(AuthContext)  
     let [ticket, setTicket] = useState([])
-    let [ticketState, setTicketState] =useState("")
+    let [ticketState, setTicketState] = useState("")
+    let [ticketComment, setTicketComments] = useState([])
 
     useEffect( () => {
        getTickets();
@@ -48,6 +50,26 @@ const TicketInfoPage = () => {
       console.log(value)
     }
 
+
+    let getTicketComments = async() => {
+      console.log("g")
+      
+        let response = await fetch(`api/getTicketComments?id=${id}`, {
+          method: 'GET',
+          headers:{
+              'Content-Type':'application/json',
+              'Authorization':'Bearer ' + String(authTokens.access)
+          }
+      })
+
+      let data = await response.json()
+      console.log(data)
+      if (response.status == 200) {
+          setTicketComments(data)
+          
+          console.log(data)
+      }
+    }
     
     let getTickets = async() => {
         let response = await fetch(`api/getTicket?id=${id}`, {
@@ -59,31 +81,31 @@ const TicketInfoPage = () => {
         })
         
         let data = await response.json()
+        
         if(response.status == 200) {
             setTicket(data)
+            
             setTicketState(data.state)
+            console.log(ticketState)
+            getTicketComments()
         }
     }
 
+    const comments = ticketComment.map(item => {
+      return (
+          <Comment
+              key={item.id}
+              item={item}
+          />
+      )
+  })
+
     return (
       <div>
-        <div style={{display: "flex"}}>
-        <Button 
-          onClick={() => navigate(-1)}
-          variant="contained" 
-          sx={{ml: 2}}>
-          Zpět
-        </Button>
-        <br/>
         <div className='ticketinfopage--header' >Nahlášená závada</div>
-        </div>
-
-    
+        <div className='ticketinfopage--name'>{ticket.name} </div>   
         <div className='ticketinfopage--wrapper'>
             
-            <br/>
-            <div className='ticketinfopage--name'>{ticket.name} </div>    
-            <br/> 
 
             <div className='ticketinfopage--icons-text'>
             <AccessAlarmIcon className='ticketinfopage--icons'/>
@@ -136,7 +158,7 @@ const TicketInfoPage = () => {
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
-            21.11.2022
+            {comments}   
             <br/>
 
         </div>

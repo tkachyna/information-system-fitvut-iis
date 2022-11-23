@@ -9,9 +9,13 @@ const Comment = (props) => {
 
 
     return (
-      <div >
-        Comment
-      </div>
+      <table className='comment--table'>
+        <tbody>
+          <tr>
+            <th className='comment--cell'>{">> " + props.item.text}</th>
+          </tr>
+        </tbody>
+      </table>
     )
   }
 export default Comment
