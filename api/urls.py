@@ -25,5 +25,6 @@ urlpatterns = [
     path('postRequestComment/', views.postRequestComment),
     path('getMyRequests/', views.getMyRequests),
     path('getRequest/', views.getRequest),
-    path('getUsers/', views.getUsers)
+    path('getUsers/', views.getUsers),
+    path('getTicketComments', views.getTicketComments)
 ]

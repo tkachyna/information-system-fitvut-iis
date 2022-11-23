@@ -170,7 +170,14 @@ def getTicket(request):
     except:
         return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
 
-
+@api_view(['GET'])
+def getTicketComments(request):
+    ticket_comment = TicketComment.sa
+    params = request.query_params.dict()
+    id = params['id']
+    tc = ticket_comment.query().filter(ticket_comment.ticket_id == id)
+    data = [{c.name: getattr(x, c.name) for c in ticket_comment.__table__.columns} for x in tc]
+    return Response(data=data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def postTicketComment(request):
