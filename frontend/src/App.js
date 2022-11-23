@@ -1,7 +1,7 @@
 import React, { Component, useContext } from "react";
 import { render } from "react-dom";
 import ReactDOM from "react-dom/client";
-import ReportFailure from "./Pages/ReportFailure";
+import AddTicket from "./Pages/AddTicket";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
@@ -13,6 +13,7 @@ import ListOfTasksPage from "./Pages/ListOfTasksPage";
 import EditAccountPage from "./Pages/EditAccountPage";
 import AddTechnicianPage from "./Pages/AddTechnicianPage";
 import TicketInfoPage from "./Pages/TicketInfoPage";
+import AddTicketCommentPage from "./Pages/AddTicketCommentPage"
 
 function PrivateRoute({children}) {
   let {user} = useContext(AuthContext)
@@ -31,11 +32,12 @@ function App () {
          <AuthProvider>
             <Header/>
             <Routes>
-            <Route  path="/reportfailure" element={<ReportFailure />}/>
+            <Route  path="/addticket" element={<AddTicket />}/>
             <Route  path="/addtechnician" element={<AddTechnicianPage />}/>
-            <Route  path="/listoffailures" element={<TicketsListPage  />}/>
+            <Route  path="/tickets" element={<TicketsListPage  />}/>
             <Route  path="/editaccount" element={<EditAccountPage />}/>
             <Route  path="/ticket" element={<TicketInfoPage />}/>
+            <Route  path="/createcomment" element={<AddTicketCommentPage/>}/>
             <Route  path="/servicerequests" element={<ListOfTasksPage />}/>
             <Route  path="/*" element={<PrivateRoute> <HomePage /> </PrivateRoute>}/>
             <Route  path="/signup" element={<SignupPage/>}/>

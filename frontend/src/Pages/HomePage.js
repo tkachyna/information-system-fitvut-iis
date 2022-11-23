@@ -24,9 +24,9 @@ const HomePage = () => {
     {user.role == 1
     &&
     <div>
-    <Button  href='/reportfailure' type="submit" variant="outlined" sx = {style} >Nahlásit závadu</Button> 
+    <Button  href='/addticket' type="submit" variant="outlined" sx = {style} >Nahlásit závadu</Button> 
     <br/>
-    <Button  href='/listoffailures' type="submit" variant="outlined" sx = {style} >Zobrazit nahlášené závady</Button> 
+    <Button  href='/tickets' type="submit" variant="outlined" sx = {style} >Zobrazit nahlášené závady</Button> 
     <br/>
     <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
     </div>

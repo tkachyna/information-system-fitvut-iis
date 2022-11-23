@@ -1,8 +1,11 @@
 import React, { Component, useContext } from 'react'
 import { Link } from "react-router-dom"
+import AuthContext from '../context/AuthContext'
+
 
 const Ticket = (props) => {
 
+    let {authTokens, logoutUser, user} = useContext(AuthContext)
     let getColor = () => {
         switch(props.state) {
             case "Podáno":
@@ -30,7 +33,12 @@ const Ticket = (props) => {
         <div className='ticket--button'>
         <Link to={`/ticket?id=${props.id}`}>Prohlédnout detaily</Link>
         </div>
-
+        {user.role == 3 
+        &&
+        <div>
+          Smazat Ticket
+        </div>  
+        }
 
       </div>
     )

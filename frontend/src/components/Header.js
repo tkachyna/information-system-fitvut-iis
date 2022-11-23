@@ -26,7 +26,7 @@ const Header = () => {
         <HomeIcon onClick={() => navigate('/')}>Home</HomeIcon>
         {user && <LogoutIcon onClick={logoutUser}>Logout</LogoutIcon>}
         {!user && <LoginIcon onClick={() => navigate('/login')}/>}
-        {user && <div className='header--loggedas'>Jsi aktuálně přihlášen jako "{user.username}", tvoje role je <ln style={{colorStyle: "bold"}}>{userRole[user.role]}</ln></div>}
+        {user && <div className='header--loggedas'>Jsi aktuálně přihlášen jako "{user.username}", tvoje role je {userRole[user.role]}</div>}
         
         <InfoIcon className='header--button-about'/>
  

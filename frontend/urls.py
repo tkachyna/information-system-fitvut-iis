@@ -4,11 +4,12 @@ urlpatterns = [
     path('', index),
     path('login', index ),
     path('homep', index ),
-    path('reportfailure', index),
-    path('listoffailures', index),
+    path('addticket', index),
+    path('tickets', index),
     path('signup', index),
     path('servicerequests', index),
     path('editaccount', index),
     path('addtechnician', index),
     path('ticket', index),
+    path('createcomment', index)
 ]

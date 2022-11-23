@@ -23,7 +23,7 @@ const LoginPage = () =>  {
             type="text" name="username" placeholder='Uživatelské jméno'/>
           <br/>
           <TextField required
-            id="outlined-basic" label='Heslo' variant="outlined" sx = {style}
+            id="outlined-basic2" label='Heslo' variant="outlined" sx = {style}
             type="password" name="password" placeholder='Enter Password'/>
           <br/>
           <Button  type="submit" variant="contained" sx = {style}>Přihlásit se</Button>

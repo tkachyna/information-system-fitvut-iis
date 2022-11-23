@@ -5,20 +5,25 @@ import { useQuery } from 'react-query'
 import AuthContext from '../context/AuthContext';
 import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
 import Ticket from '../components/Ticket';
+import { Select }from '@mui/material';
+import { MenuItem }from '@mui/material';
+import MessageIcon from '@mui/icons-material/Message';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
-
+import AddIcon from '@mui/icons-material/Add';
 import { Divider } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
 
 const TicketInfoPage = () => {
 
     const navigate = useNavigate();
+    const navigate2 = useNavigate();
     const useQuery = () => new URLSearchParams(useLocation().search);
     const query = useQuery();
     const id = query.get('id');
 
     let {authTokens, logoutUser, user} = useContext(AuthContext)  
     let [ticket, setTicket] = useState([])
+    let [ticketState, setTicketState] =useState("")
 
     useEffect( () => {
        getTickets();
@@ -37,6 +42,12 @@ const TicketInfoPage = () => {
       }
     } 
 
+    function handleChange(event) {
+      const {value} = event.target
+      setTicketState(value)
+      console.log(value)
+    }
+
     
     let getTickets = async() => {
         let response = await fetch(`api/getTicket?id=${id}`, {
@@ -50,6 +61,7 @@ const TicketInfoPage = () => {
         let data = await response.json()
         if(response.status == 200) {
             setTicket(data)
+            setTicketState(data.state)
         }
     }
 
@@ -79,7 +91,24 @@ const TicketInfoPage = () => {
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
+            {user.role == 1
+            &&
             <span style={getColor()}>{ticket.state}</span>
+            }
+            {user.role == 3
+            &&
+            <Select
+              labelId="state"
+              id="state"
+              value={ticketState}
+              label="state"
+              onChange={handleChange}
+            >
+              <MenuItem value={"Podáno"}>Podáno</MenuItem>
+              <MenuItem value={"V řešení"}>V řešení</MenuItem>
+              <MenuItem value={"Dokončeno"}>Dokončeno</MenuItem>
+            </Select>
+            }
             <br/>
             <div className='ticketinfopage--icons-text'>
             <CommentIcon className='ticketinfopage--icons'/>
@@ -92,6 +121,18 @@ const TicketInfoPage = () => {
             <div className='ticketinfopage--icons-text'>
             <AccessTimeFilledOutlinedIcon className='ticketinfopage--icons'/>
             <span>Nahlášeno dne</span>
+            </div>
+            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
+            <br/>
+            21.11.2022
+            <br/>
+            <div className='ticketinfopage--icons-text'>
+            <MessageIcon className='ticketinfopage--icons'/>
+            <span>Komentáře</span>
+            {user.role === 3
+            &&
+            <AddIcon className='ticketinfopage--icons-2' onClick={() => navigate2(`/createcomment?ticket_id=${id}`)}/>
+            }
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>

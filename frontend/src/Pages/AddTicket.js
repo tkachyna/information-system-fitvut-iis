@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import AuthContext from '../context/AuthContext';
 import { Alert } from '@mui/material';
 
-const ReportFailure = () => {
+const AddTicket = () => {
 
     const [formData, setFormData] = React.useState(
       { 
@@ -29,22 +29,24 @@ const ReportFailure = () => {
     let {authTokens, logoutUser, user} = useContext(AuthContext) 
     const [sentStatus, setSentStatus] = React.useState(0)
     const [selectedDate, setSelectedDate] = React.useState(new Date())
-    const [validation, setValidation] = React.useState(false)
 
     let validateForm = () => {
-        if(formData.title !== "" && formData.description!== "") {
-          setValidation(true)
-          return
+        if(formData.title !== "" && formData.description !== "") {
+          console.log("gg")
+          return true
         } else {
+          console.log("ff")
           setSentStatus(2)
-          return 
+          return false
         }
     }
 
     let postTicket = async() => {
-
-      validateForm()
-      if (validation == true) {
+      
+      
+      let validation = validateForm()
+      console.log(validation)
+      if (validation) {
         console.log(user.user_id)
         console.log("valid success")
         let response = await fetch("api/createTicket?id=4", {
@@ -70,9 +72,7 @@ const ReportFailure = () => {
       } else {
           setSentStatus(1)
       }
-      } else {
-        return 0
-      }
+    }
       
   }
 
@@ -126,8 +126,6 @@ const ReportFailure = () => {
           <TextField
             required
             style={{textAlign: 'left'}}
-            hintText="Message Field"
-            floatingLabelText="MultiLine and FloatingLabel"
             multiline
             placeholder='Popište zde závadu, kterou chcete nahlásit.'
             rows={4}
@@ -145,8 +143,6 @@ const ReportFailure = () => {
           <p className='signup--text-2'>Fotografie</p>
           <TextField
             style={{textAlign: 'left'}}
-            hintText="Message Field"
-            floatingLabelText="MultiLine and FloatingLabel"
             placeholder='Můžete přiložit obrázek (pouze URL)'
             rows={1}
             sx={{ width: 500, ml: 2 }}
@@ -163,4 +159,4 @@ const ReportFailure = () => {
     ) 
 }
 
-export default ReportFailure
+export default AddTicket

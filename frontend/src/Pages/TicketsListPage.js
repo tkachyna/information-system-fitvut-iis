@@ -30,9 +30,10 @@ const TicketsListPage = () => {
     }
 
 
-    const items = listOfTickets.map((item) => {
+    const items = listOfTickets.map(item => {
         return (
             <Ticket
+                key={item.id}
                 id={item.id}
                 description={item.description}
                 state={item.state}
