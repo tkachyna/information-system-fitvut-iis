@@ -349,3 +349,40 @@ def getUsers(request):
     #erializer = [{c.name: getattr(x, c.name) for c in User.__table__.columns} for x in users]
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+def editTicket(request):
+    db = create_engine(
+        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
+    ticket = Ticket.sa
+    data = json.loads(request.body)
+    # valid user check
+    u = session.query(User).filter(User.id == data['author_id'])
+    if u.count() == 0:
+        # session.close()
+        db.dispose()
+        return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
+    if u[0].role != 4:  # change to manager (3)
+        # session.close()
+        db.dispose()
+        return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
+    # valid ticket check
+    t = session.query(ticket).filter(ticket.id == data['id'])
+    if t.count() == 0:
+        # session.close()
+        db.dispose()
+        return Response(data={'Incorrect ticket'}, status=status.HTTP_400_BAD_REQUEST)
+    # technician assign check -not necessary?
+    try:
+        session.query(ticket).filter(ticket.id == data['id']).update({"state": data['state']})
+        session.commit()
+        t = session.query(ticket).filter(ticket.id == data['id'])
+        r_serialized = {c.name: getattr(t[0], c.name) for c in ticket.__table__.columns}
+        db.dispose()
+        return Response(data=r_serialized, status=status.HTTP_200_OK)
+    except:
+        db.dispose()
+        return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
+
+
