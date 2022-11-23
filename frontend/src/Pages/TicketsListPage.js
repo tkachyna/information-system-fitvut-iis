@@ -37,6 +37,7 @@ const TicketsListPage = () => {
                 id={item.id}
                 description={item.description}
                 state={item.state}
+                creation_date_time={item.creation_date_time}
                 name={item.name}
             />
         )
@@ -45,6 +46,21 @@ const TicketsListPage = () => {
   return (
     <div>
         <h3 style={{margin: "0px 0px 16px 16px"}}>Seznam nahlášených závad</h3>
+        <table className='ticket--table '>
+        <tbody>
+          <tr style={{height: 40}}>
+            <td style={{width: 50}}></td> 
+            <td style={{width: 100}}>Čislo Tiketu</td>
+            <td style={{width: 250}}>Datum Odeslání Tiketu</td>
+            <td style={{width: 300}}>Název</td>
+            <td style={{width: 120}}>Stav</td>
+            <td style={{width: 100}}></td>
+            {user.role == 3 
+            &&
+            <td style={{width: 100}}>  </td>}
+          </tr>
+        </tbody>
+      </table>
         <div>
             {items}
         </div>
