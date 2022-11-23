@@ -67,7 +67,6 @@ def regUser(request):
 
 @api_view(['POST'])
 def getUserID(request):
-
     data = json.loads(request.body)
     print(data['id'])
     db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
