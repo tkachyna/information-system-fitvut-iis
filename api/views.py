@@ -20,6 +20,7 @@ from .models import Ticket, User, TicketComment, Request, RequestComment, Pictur
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 #make entities available as SQLAlchemy models
+User = User.sa
 # listing view for testing queries
 
 
@@ -341,6 +342,7 @@ def getRequest(request):
 
 @api_view(['GET'])
 def getUsers(request):
+    from .models import User
     users = User.objects.all()
     print(users[0])
     serializer = UserSerializer(users, many=True)
