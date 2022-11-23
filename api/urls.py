@@ -8,7 +8,6 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('', views.getRoutes),
-    path('all/', views.listing, name='people_view'),
     path('regU/', views.regUser),
     path('accounts/', include('django.contrib.auth.urls')),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -25,5 +24,6 @@ urlpatterns = [
     path('editRequest/', views.editRequest),
     path('postRequestComment/', views.postRequestComment),
     path('getMyRequests/', views.getMyRequests),
-    path('getRequest/', views.getRequest)
+    path('getRequest/', views.getRequest),
+    path('getUsers/', views.getUsers)
 ]

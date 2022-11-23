@@ -20,16 +20,7 @@ from .models import Ticket, User, TicketComment, Request, RequestComment, Pictur
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 #make entities available as SQLAlchemy models
-User = User.sa
 # listing view for testing queries
-
-
-def listing(request):
-    data = {
-        "users" : User.query().filter(User.role == 1),
-    }
-
-    return render(request, "listing.html", data)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -335,6 +326,8 @@ def getMyRequests(request):
     data = [{c.name: getattr(x, c.name) for c in req.__table__.columns} for x in reqs]
     return Response(data=data, status=status.HTTP_200_OK)
 
+
+@api_view(['GET'])
 def getRequest(request):
     req = Request.sa
     params = request.query_params.dict()
@@ -345,3 +338,12 @@ def getRequest(request):
         return Response(data=data, status=status.HTTP_200_OK)
     except:
         return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getUsers(request):
+    users = User.objects.all()
+    print(users[0])
+    serializer = UserSerializer(users, many=True)
+    #erializer = [{c.name: getattr(x, c.name) for c in User.__table__.columns} for x in users]
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+

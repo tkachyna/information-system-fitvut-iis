@@ -21,6 +21,6 @@ urlpatterns = [
     path('', include('frontend.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path("users/", api.views.listing, name="listing"),
+    #path("users/", api.views.listing, name="listing"),
     
 ]
