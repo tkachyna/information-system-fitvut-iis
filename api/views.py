@@ -443,6 +443,6 @@ def getRequestComments(request):
     request_comment = RequestComment.sa
     params = request.query_params.dict()
     id = params['id']
-    rc = request_comment.query().filter(request_comment.ticket_id == id)
+    rc = request_comment.query().filter(request_comment.request_id == id)
     data = [{c.name: getattr(x, c.name) for c in request_comment.__table__.columns} for x in rc]
     return Response(data=data, status=status.HTTP_200_OK)
