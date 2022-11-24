@@ -426,3 +426,23 @@ def getRequests(request):
     requests = request.query().all()
     data = [{c.name: getattr(x, c.name) for c in request.__table__.columns} for x in requests]
     return Response(data=data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def deleteRequest(request):
+    params = request.query_params.dict()
+    id = params['id']
+    try:
+        r = Request.objects.get(id=id)
+        r.delete()
+        return Response(data={"Successfully deleted"}, status=status.HTTP_200_OK)
+    except:
+        return Response(data={"Invalid id"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getRequestComments(request):
+    request_comment = RequestComment.sa
+    params = request.query_params.dict()
+    id = params['id']
+    rc = request_comment.query().filter(request_comment.ticket_id == id)
+    data = [{c.name: getattr(x, c.name) for c in request_comment.__table__.columns} for x in rc]
+    return Response(data=data, status=status.HTTP_200_OK)

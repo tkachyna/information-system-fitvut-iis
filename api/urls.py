@@ -22,7 +22,6 @@ urlpatterns = [
     path('getMyTickets', views.getMyTickets),
     path('getTicket', views.getTicket),
     path('editRequest/', views.editRequest),
-    path('postRequestComment/', views.postRequestComment),
     path('getMyRequests/', views.getMyRequests),
     path('getRequest/', views.getRequest),
     path('getUsers/', views.getUsers),
@@ -30,5 +29,7 @@ urlpatterns = [
     path('getTicketComments', views.getTicketComments),
     path('editUserRole', views.editUserRole),
     path('deleteTicket', views.deleteTicket),
-    path('getRequests', views.getRequests)
+    path('getRequests', views.getRequests),
+    path('deleteRequest', views.deleteRequest),
+    path('getRequestComments', views.getRequestComments)
 ]
