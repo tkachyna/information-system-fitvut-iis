@@ -54,6 +54,7 @@ const ListOfTasksPage = () => {
             <td style={{width: 250}}>Datum Odeslání Tiketu</td>
             <td style={{width: 300}}>Název</td>
             <td style={{width: 120}}>Stav</td>
+            <td style={{width: 120}}>Komentáře</td>
             <td style={{width: 100}}></td>
             {user.role == 3 
             &&

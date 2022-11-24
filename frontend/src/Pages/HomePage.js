@@ -74,7 +74,9 @@ const HomePage = () => {
     <br/>
     <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat nahlášené závady</Button>
     <br/>
-    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Vytvoření servisního požadavku  </Button> 
+    <Button  href='/servicerequests2' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
+    <br/>
+    <Button  href='/addrequest' type="submit" variant="outlined" sx = {style} >Vytvoření servisního požadavku  </Button> 
     <br/>
     <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
     </div>

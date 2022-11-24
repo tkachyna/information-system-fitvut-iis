@@ -3,17 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom"
 import { Button } from '@mui/material';
 import AuthContext from '../context/AuthContext'
-import TopicIcon from '@mui/icons-material/Topic';
+import ConstructionIcon from '@mui/icons-material/Construction';
 
 
-const Ticket = (props) => {
+const ServiceRequest = (props) => {
 
     let navigate = useNavigate()
     let [numOfComments, setNumOfComments] = useState()
     let {authTokens, logoutUser, user} = useContext(AuthContext)
 
     useEffect(() => {
-      getTicketComments()
+      //getTicketComments()
     }, [])
 
     let getColor = () => {
@@ -29,9 +29,9 @@ const Ticket = (props) => {
         }
     }
 
-    let deleteTicket = async() => {
+    let deleteRequest = async() => {
 
-      let response = await fetch(`api/deleteTicket?id=${props.id}`, {
+      let response = await fetch(`api/deleteTicket?id=${props.item.id}`, {
           method: 'DELETE',
           headers:{
               'Content-Type':'application/json',
@@ -48,7 +48,7 @@ const Ticket = (props) => {
 
     let getTicketComments = async() => {
       
-        let response = await fetch(`api/getTicketComments?id=${props.id}`, {
+        let response = await fetch(`api/getTicketComments?id=${props.item.id}`, {
           method: 'GET',
           headers:{
               'Content-Type':'application/json',
@@ -72,16 +72,16 @@ const Ticket = (props) => {
       <table className='user--table '>
         <tbody>
           <tr>
-            <td style={{width: 50}}><TopicIcon/></td> 
-            <td style={{width: 100}}>Tiket {props.id} </td>
-            <td style={{width: 250}}> {formatDate(String(props.creation_date_time))}</td>
-            <td style={{width: 300}}> {props.name} </td>
-            <td style={{width: 120}}><div style={getColor()}>{props.state}</div></td>
+            <td style={{width: 50}}><ConstructionIcon/></td> 
+            <td style={{width: 100}}>Požadavek {props.item.id} </td>
+            <td style={{width: 250}}> {formatDate(String(props.item.creation_date_time))}</td>
+            <td style={{width: 300}}> {props.item.name} </td>
+            <td style={{width: 120}}><div style={getColor()}>{props.item.state}</div></td>
             <td style={{width: 120}}>{numOfComments}</td>
-            <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/ticket?id=${props.id}`)}>DETAILY</Button> </td>
+            <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/ticket?id=${props.item.id}`)}>DETAILY</Button> </td>
             {user.role == 3 
             &&
-            <td style={{width: 100}}> <Button variant="outlined" onClick={deleteTicket}>SMAZAT</Button> </td>}
+            <td style={{width: 100}}> <Button variant="outlined" onClick={deleteRequest}>SMAZAT</Button> </td>}
           </tr>
         </tbody>
       </table>
@@ -89,4 +89,4 @@ const Ticket = (props) => {
     )
   }
 
-export default Ticket
+export default ServiceRequest

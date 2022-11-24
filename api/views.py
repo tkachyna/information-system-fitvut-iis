@@ -244,7 +244,7 @@ def createRequest(request):
     if u.count() == 0:
         db.dispose()
         return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 4:  #manager
+    if u[0].role != 3:  #manager
         db.dispose()
         return Response(data={'User is not manager!!'}, status=status.HTTP_400_BAD_REQUEST)
     # valid ticket check
