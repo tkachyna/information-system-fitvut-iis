@@ -1,4 +1,4 @@
-import React, { Component, useContext } from 'react'
+import React, { Component, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom"
 import { Button } from '@mui/material';
@@ -9,7 +9,13 @@ import TopicIcon from '@mui/icons-material/Topic';
 const Ticket = (props) => {
 
     let navigate = useNavigate()
+    let [numOfComments, setNumOfComments] = useState()
     let {authTokens, logoutUser, user} = useContext(AuthContext)
+
+    useEffect(() => {
+      getTicketComments()
+    }, [])
+
     let getColor = () => {
         switch(props.state) {
             case "Podáno":
@@ -37,7 +43,25 @@ const Ticket = (props) => {
           console.log("Deleted")
           window.location.reload()
       } 
-  }
+    }
+
+
+    let getTicketComments = async() => {
+      
+        let response = await fetch(`api/getTicketComments?id=${props.id}`, {
+          method: 'GET',
+          headers:{
+              'Content-Type':'application/json',
+              'Authorization':'Bearer ' + String(authTokens.access)
+          }
+      })
+
+      let data = await response.json()
+
+      if (response.status == 200) {
+          setNumOfComments(data.length)
+      }
+    }
 
     function formatDate(string){
       var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
@@ -53,6 +77,7 @@ const Ticket = (props) => {
             <td style={{width: 250}}> {formatDate(String(props.creation_date_time))}</td>
             <td style={{width: 300}}> {props.name} </td>
             <td style={{width: 120}}><div style={getColor()}>{props.state}</div></td>
+            <td style={{width: 120}}>{numOfComments}</td>
             <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/ticket?id=${props.id}`)}>DETAILY</Button> </td>
             {user.role == 3 
             &&

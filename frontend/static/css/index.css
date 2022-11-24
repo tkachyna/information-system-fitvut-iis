@@ -224,6 +224,18 @@ a:link, a:visited {
     font-size: 15px;
 }
 
+.sr--table {
+    margin: 5px 0 5px 16px;
+    padding-left: 16px;
+}
+
+.sr--cell {
+    width: 400px;
+    text-align: left;
+    font-size: 15px;
+}
+
+
 .ticket--table {
     margin: 5px 0 5px 16px;
     border-radius: 5px;
