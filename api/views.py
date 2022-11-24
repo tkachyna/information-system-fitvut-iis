@@ -419,3 +419,10 @@ def editUserRole(request):
     session.commit()
     db.dispose()
     return Response(data={'User role changed'}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getRequests(request):
+    request = Request.sa
+    requests = request.query().all()
+    data = [{c.name: getattr(x, c.name) for c in request.__table__.columns} for x in requests]
+    return Response(data=data, status=status.HTTP_200_OK)
