@@ -23,6 +23,22 @@ const Ticket = (props) => {
         }
     }
 
+    let deleteTicket = async() => {
+
+      let response = await fetch(`api/deleteTicket?id=${props.id}`, {
+          method: 'DELETE',
+          headers:{
+              'Content-Type':'application/json',
+              'Authorization':'Bearer ' + String(authTokens.access)
+          }  
+      })
+
+      if (response.status == 200) {
+          console.log("Deleted")
+          window.location.reload()
+      } 
+  }
+
     function formatDate(string){
       var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
       return new Date(string).toLocaleDateString([],options);
@@ -40,7 +56,7 @@ const Ticket = (props) => {
             <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/ticket?id=${props.id}`)}>DETAILY</Button> </td>
             {user.role == 3 
             &&
-            <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/ticket?id=${props.id}`)}>SMAZAT</Button> </td>}
+            <td style={{width: 100}}> <Button variant="outlined" onClick={deleteTicket}>SMAZAT</Button> </td>}
           </tr>
         </tbody>
       </table>
