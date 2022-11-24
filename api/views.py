@@ -17,7 +17,7 @@ import json
 from .serializers import ModelSerializer, TicketSerializer, UserSerializer
 from .models import Ticket, User, TicketComment, Request, RequestComment, Picture
 
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, delete
 from sqlalchemy.orm import sessionmaker
 #make entities available as SQLAlchemy models
 User = User.sa
@@ -115,7 +115,7 @@ def createTicket(request):
     # print(data['text'])
     try:
         # kontrola, ze je customer citizen a admin spravce??
-        new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=3,
+        new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=31,
                       creation_date_time=timezone.now())
         # print(new_ticket.description)
         session.add(new_ticket)
@@ -158,6 +158,21 @@ def getMyTickets(request):
     tickets = ticket.query().filter(ticket.customer_id == id)
     data = [{c.name: getattr(x, c.name) for c in ticket.__table__.columns} for x in tickets]
     return Response(data=data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def deleteTicket(request):
+    #ticket = Ticket.sa
+    params = request.query_params.dict()
+
+    id = params['id']
+    print(params, id)
+
+    try:
+        t = Ticket.objects.get(id=id)
+        t.delete()
+        return Response(data={"Successfully deleted"}, status=status.HTTP_200_OK)
+    except:
+        return Response(data={"Invalid id"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def getTicket(request):
