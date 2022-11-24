@@ -29,5 +29,6 @@ urlpatterns = [
     path('editTicket/', views.editTicket),
     path('getTicketComments', views.getTicketComments),
     path('editUserRole', views.editUserRole),
-    path('deleteTicket', views.deleteTicket)
+    path('deleteTicket', views.deleteTicket),
+    path('getRequests', views.getRequests)
 ]

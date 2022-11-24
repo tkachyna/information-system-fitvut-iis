@@ -16,7 +16,7 @@ const ListOfServiceRequestsPage = () => {
     }, [])
     
     let getServiceRequests = async() => {
-        let response = await fetch(`api/getMyTickets?id=${user.user_id}`, {
+        let response = await fetch(`api/getRequests`, {
             method: 'GET',
             headers:{
                 'Content-Type':'application/json',
