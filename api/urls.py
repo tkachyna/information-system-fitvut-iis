@@ -28,5 +28,6 @@ urlpatterns = [
     path('getUsers/', views.getUsers),
     path('editTicket/', views.editTicket),
     path('getTicketComments', views.getTicketComments),
-    path('deleteTicket', views.deleteTicket )
+    path('editUserRole', views.editUserRole),
+    path('deleteTicket', views.deleteTicket)
 ]

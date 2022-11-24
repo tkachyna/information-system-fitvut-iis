@@ -7,7 +7,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import LogoutIcon from '@mui/icons-material/Logout';
 import InfoIcon from '@mui/icons-material/Info';
-import LoginIcon from '@mui/icons-material/Login';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';import LoginIcon from '@mui/icons-material/Login';
 
 const Header = () => {
 
@@ -22,6 +22,7 @@ const Header = () => {
 
     return (
       <div className='header'>
+        <NavigateBeforeIcon onClick={() => navigate(-1)}>Home</NavigateBeforeIcon>
         <h2> {"Informační systém správy závad"}</h2>
         <HomeIcon onClick={() => navigate('/')}>Home</HomeIcon>
         {user && <LogoutIcon onClick={logoutUser}>Logout</LogoutIcon>}

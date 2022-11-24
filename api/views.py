@@ -67,7 +67,6 @@ def regUser(request):
 
 @api_view(['POST'])
 def getUserID(request):
-
     data = json.loads(request.body)
     print(data['id'])
     db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
@@ -185,6 +184,7 @@ def getTicket(request):
         return Response(data=data, status=status.HTTP_200_OK)
     except:
         return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def getTicketComments(request):
@@ -407,4 +407,15 @@ def editTicket(request):
         db.dispose()
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
 
-
+@api_view(['POST'])
+def editUserRole(request):
+    data = json.loads(request.body)
+    db = create_engine(
+        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    Session = sessionmaker(bind=db)
+    session = Session()
+    session.query(User).filter(User.id == data['id']).update(
+        {"role": data['role']})
+    session.commit()
+    db.dispose()
+    return Response(data={'User role changed'}, status=status.HTTP_200_OK)
