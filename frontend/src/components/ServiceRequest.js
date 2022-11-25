@@ -31,7 +31,7 @@ const ServiceRequest = (props) => {
 
     let deleteRequest = async() => {
 
-      let response = await fetch(`api/deleteTicket?id=${props.item.id}`, {
+      let response = await fetch(`api/deleteRequest?id=${props.item.id}`, {
           method: 'DELETE',
           headers:{
               'Content-Type':'application/json',

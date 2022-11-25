@@ -1,10 +1,12 @@
 import React, { Component, useContext, useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Select }from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { MenuItem, FormControl, InputLabel, Alert }from '@mui/material';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 const AddTicket = () => {
 
@@ -17,6 +19,8 @@ const AddTicket = () => {
 
     let [tickets, setTickets] = React.useState([])
     let [techs, setTechnicians] = React.useState([])
+
+    let navigate = useNavigate()
 
     useEffect(() => {
         getTickets()
@@ -192,7 +196,7 @@ const AddTicket = () => {
                     </Alert>
                     }
                 </td></tr>
-            <tr><td className='user--cell' style={{fontSize: 25, height: 80}}>
+            <tr><td style={{fontSize: 25, height: 80, ml: 2}}>
                 Vytvoření servisního požadavku
             </td></tr>
             <tr><td className='user--cell'>
@@ -213,7 +217,8 @@ const AddTicket = () => {
                         severity="info"
                         sx={{width: 470}}>
                        {`Zadejte jedno ID (možné ${tickets})`}
-                    </Alert></td></tr>
+                       </Alert></td>
+                    <td ><RemoveRedEyeIcon sx={{ml: 2}} onClick={() => navigate('/servicerequests')}/></td></tr>
             <tr><td className='sr--cell' style={{height: 100}}>
                 <TextField 
                     required
@@ -227,11 +232,12 @@ const AddTicket = () => {
                     />
             </td></tr>
             <tr><td className='user--cell' style={{height: 50}}>Zadejte identifikační číslo technického pracovníka</td></tr>
-            <tr><td className='user--cell' style={{height: 50}}><Alert
+            <tr><td  style={{height: 50}}><Alert
                         severity="info"
-                        sx={{width: 470}}>
+                        >
                         {`Zadejte >= 1 ID oddělené "," (možné ${techs})`}
-                    </Alert></td></tr>
+                    </Alert></td>
+                    <td><RemoveRedEyeIcon sx={{ml: 2}} onClick={() => navigate('/addtechnician')} /></td></tr>
             <tr><td className='sr--cell' style={{height: 100}}>
                 <TextField 
                     required
@@ -249,7 +255,7 @@ const AddTicket = () => {
                     required    
                     variant="contained"
                     onClick={postTicket}
-                    sx={{width: 200}}
+                    sx={{width: 200, height: 50}}
                     >
                     Odeslat
                 </Button>    

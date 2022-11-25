@@ -25,11 +25,13 @@ urlpatterns = [
     path('getMyRequests/', views.getMyRequests),
     path('getRequest/', views.getRequest),
     path('getUsers/', views.getUsers),
-    path('editTicket/', views.editTicket),
+    path('editTicket', views.editTicket),
     path('getTicketComments', views.getTicketComments),
     path('editUserRole', views.editUserRole),
     path('deleteTicket', views.deleteTicket),
     path('getRequests', views.getRequests),
     path('deleteRequest', views.deleteRequest),
-    path('getRequestComments', views.getRequestComments)
+    path('getRequestComments', views.getRequestComments),
+    path('deleteAccount', views.deleteAccount),
+    path('changePassword', views.changePassword),
 ]

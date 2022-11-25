@@ -85,12 +85,24 @@ def changeUserInfo(request):
     data = json.loads(request.body)
     owner = request.user
     owner.username = data['user']
+    owner.first_name = data['first_name']
+    owner.last_name = data['last_name']
     owner.email = data['email']
     owner.city = data['city']
     owner.street = data['street']
     owner.zipcode = data['zipcode']
     owner.phone_number = data['phone_number']
     owner.save()
+    return HttpResponse()
+
+@api_view(['POST'])
+def changePassword(request):
+    from .models import User
+    data = json.loads(request.body)
+    print(data)
+    user = User.objects.get(id=data['id'])
+    user.set_password(data['password'])
+    user.save()
     return HttpResponse()
 
 @api_view(['POST'])
@@ -385,7 +397,7 @@ def editTicket(request):
         # session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 4:  # change to manager (3)
+    if u[0].role != 3:  # change to manager (3)
         # session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
@@ -446,3 +458,11 @@ def getRequestComments(request):
     rc = request_comment.query().filter(request_comment.request_id == id)
     data = [{c.name: getattr(x, c.name) for c in request_comment.__table__.columns} for x in rc]
     return Response(data=data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def deleteAccount(request):
+    from .models import User
+    data = json.loads(request.body)
+    user = User.objects.get(id=data['id'])
+    user.delete()
+    return HttpResponse()

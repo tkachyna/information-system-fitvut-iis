@@ -46,7 +46,7 @@ const TicketInfoPage = () => {
 
     function handleChange(event) {
       const {value} = event.target
-      setTicketState(value)
+      updateTicketState(value)
       console.log(value)
     }
 
@@ -81,7 +81,7 @@ const TicketInfoPage = () => {
         })
         
         let data = await response.json()
-        
+        console.log(data)
         if(response.status == 200) {
             setTicket(data)
             
@@ -90,6 +90,32 @@ const TicketInfoPage = () => {
             getTicketComments()
         }
     }
+
+    let updateTicketState = async(value) => {
+      let response = await fetch(`api/editTicket`, {
+          method: 'POST',
+          headers:{
+              'Content-Type':'application/json',
+              'Authorization':'Bearer ' + String(authTokens.access)
+          },
+          body: JSON.stringify({
+            author_id: user.user_id,
+            id: ticket.id,
+            state: value
+          })
+      })
+      
+      let data = await response.json()
+      console.log(data)
+      if(response.status == 200) {
+          setTicket(data)
+          
+          setTicketState(data.state)
+          console.log(ticketState)
+          getTicketComments()
+      }
+  }
+
 
     const comments = ticketComment.map(item => {
       return (
@@ -126,9 +152,9 @@ const TicketInfoPage = () => {
               label="state"
               onChange={handleChange}
             >
-              <MenuItem value={"Podáno"}>Podáno</MenuItem>
-              <MenuItem value={"V řešení"}>V řešení</MenuItem>
-              <MenuItem value={"Dokončeno"}>Dokončeno</MenuItem>
+              <MenuItem value={'1'}>Podáno</MenuItem>
+              <MenuItem value={'2'}>V řešení</MenuItem>
+              <MenuItem value={'3'}>Dokončeno</MenuItem>
             </Select>
             }
             <br/>

@@ -38,6 +38,7 @@ const User = (props) => {
             <tbody>
             <tr>
                 <th className='user--cell' style={{width: 50}}><AccountCircleIcon/></th>
+                <th className='user--cell' style={{width: 50}} >{props.user.id}</th>
                 <th className='user--cell' >{props.user.username}</th>
                 <th className='user--cell'>
                 <Select

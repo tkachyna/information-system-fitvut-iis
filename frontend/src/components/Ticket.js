@@ -18,16 +18,31 @@ const Ticket = (props) => {
 
     let getColor = () => {
         switch(props.state) {
-            case "Podáno":
+            case '1':
               return {color: "#e60000"} 
-            case "V řešení":
+            case '2':
               return {color: "#ff9900"} 
-            case "Dokončeno":
+            case '3':
               return {color: "#33cc33"} 
             default:
               return {color: "#e60000"} 
         }
     }
+
+    let getState = () => {
+      switch(props.state) {
+        case '1':
+          return 'Podáno'
+        case '2':
+          return 'V řešení'
+        case '3':
+          return 'Dokončeno'
+        default:
+          return 'Error'
+    }
+}
+
+    
 
     let deleteTicket = async() => {
 
@@ -76,7 +91,7 @@ const Ticket = (props) => {
             <td style={{width: 100}}>Tiket {props.id} </td>
             <td style={{width: 250}}> {formatDate(String(props.creation_date_time))}</td>
             <td style={{width: 300}}> {props.name} </td>
-            <td style={{width: 120}}><div style={getColor()}>{props.state}</div></td>
+            <td style={{width: 120}}><div style={getColor()}>{getState()}</div></td>
             <td style={{width: 120}}>{numOfComments}</td>
             <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/ticket?id=${props.id}`)}>DETAILY</Button> </td>
             {user.role == 3 

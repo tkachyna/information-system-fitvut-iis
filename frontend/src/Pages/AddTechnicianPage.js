@@ -51,7 +51,7 @@ const AddTechnicianPage = () => {
     <div>
       <Alert 
             severity="info"
-            sx={{width: 470}}>
+            sx={{width: 470, ml: 2}}>
             Můžeš měnit roli jen uživatelům s rolí nižší, než máš ty.
         </Alert>
       <h2 style={{marginLeft: 16}}>Seznam uživatelů</h2>
