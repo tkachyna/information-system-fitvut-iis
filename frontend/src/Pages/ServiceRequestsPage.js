@@ -52,7 +52,7 @@ const ServiceRequestPage = () => {
           case "V řešení":
             return {color: "#ff9900"} 
           case "Dokončeno":
-            return {color: "#006600"} 
+            return {color: "#02630c"} 
           default:
             return {color: "#e60000"} 
       }
@@ -61,13 +61,11 @@ const ServiceRequestPage = () => {
     function handleChange2(event) {
         const {value} = event.target
         updateRequestEstTime(value)
-        console.log(value)
       }
       
     function handleChange(event) {
       const {value} = event.target
       updateRequestState(value)
-      console.log(value)
     }
 
 
@@ -98,11 +96,9 @@ const ServiceRequestPage = () => {
         })
         
         let data = await response.json()
-        console.log(data)
-        console.log(data.t_id)
+
         if(response.status == 200) {
             setRequest(data)
-            
             setRequestState(data.state)
 
             getrequestComments()
@@ -130,6 +126,22 @@ const ServiceRequestPage = () => {
         })
     }
 
+    let updateTicketState = async() => {
+      let response = await fetch(`api/editTicket`, {
+          method: 'POST',
+          headers:{
+              'Content-Type':'application/json',
+              'Authorization':'Bearer ' + String(authTokens.access)
+          },
+          body: JSON.stringify({
+            author_id: user.user_id,
+            id: request.ticket_id,
+            state: '3'
+          })
+      })
+    }
+
+
     let updateRequestState = async(value) => {
       let response = await fetch(`api/editRequest`, {
           method: 'POST',
@@ -141,16 +153,16 @@ const ServiceRequestPage = () => {
             author_id: user.user_id,
             id: request.id,
             state: value
-          })
+          }) 
       })
       
       let data = await response.json()
-      console.log(data)
+
       if(response.status == 200) {
-          setRequest(data)
-          
+          if (value == "3") {
+            updateTicketState()
+          }
           setRequestState(data.state)
-          console.log(requestState)
          // getrequestComments()
       }
   }
@@ -213,6 +225,7 @@ let keyPress1 = (e) => {
     return new Date(string).toLocaleDateString([],options);
   }
    
+
     return (
       <div>
         <h2 style={{marginLeft: 16, marginTop: 16}} >Servisní požadavek</h2>

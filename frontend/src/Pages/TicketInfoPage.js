@@ -31,16 +31,33 @@ const TicketInfoPage = () => {
 
     let getColor = () => {
       switch(ticket.state) {
-          case "Podáno":
+          case "1":
             return {color: "#e60000"} 
-          case "V řešení":
+          case "2":
             return {color: "#ff9900"} 
-          case "Dokončeno":
-            return {color: "#006600"} 
+          case "3":
+            return {color: "#02630c"} 
+          case "4":
+            return {color: "#630202"} 
           default:
             return {color: "#e60000"} 
       }
     } 
+
+    let getState = () => {
+      switch(ticket.state) {
+        case "1":
+          return "Podáno" 
+        case "2":
+          return "V řešení" 
+        case "3":
+          return "Dokončeno"
+        case "4":
+          return "Zamítnuto"
+        default:
+          return "Error"
+    }
+  } 
 
     function handleChange(event) {
       const {value} = event.target
@@ -140,7 +157,7 @@ const TicketInfoPage = () => {
             <br/>
             {user.role == 1
             &&
-            <span style={getColor()}>{ticket.state}</span>
+            <span style={getColor()}>{getState()}</span>
             }
             {user.role == 3
             &&
@@ -154,6 +171,7 @@ const TicketInfoPage = () => {
               <MenuItem value={'1'}>Podáno</MenuItem>
               <MenuItem value={'2'}>V řešení</MenuItem>
               <MenuItem value={'3'}>Dokončeno</MenuItem>
+              <MenuItem value={'4'}>Zamítnuto</MenuItem>
             </Select>
             }
             <br/>

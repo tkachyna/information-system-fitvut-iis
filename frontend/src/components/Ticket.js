@@ -16,30 +16,34 @@ const Ticket = (props) => {
     }, [])
 
     let getColor = () => {
-        switch(props.state) {
-            case '1':
-              return {color: "#e60000"} 
-            case '2':
-              return {color: "#ff9900"} 
-            case '3':
-              return {color: "#33cc33"} 
-            default:
-              return {color: "#e60000"} 
-        }
-    }
+      switch(props.state) {
+          case "1":
+            return {color: "#e60000"} 
+          case "2":
+            return {color: "#ff9900"} 
+          case "3":
+            return {color: "#02630c"} 
+          case "4":
+            return {color: "#630202"} 
+          default:
+            return {color: "#e60000"} 
+      }
+    } 
 
     let getState = () => {
       switch(props.state) {
-        case '1':
-          return 'Podáno'
-        case '2':
-          return 'V řešení'
-        case '3':
-          return 'Dokončeno'
+        case "1":
+          return "Podáno" 
+        case "2":
+          return "V řešení" 
+        case "3":
+          return "Dokončeno"
+        case "4":
+          return "Zamítnuto"
         default:
-          return 'Error'
-      }
-  }
+          return "Error"
+    }
+  } 
 
     
     let deleteTicket = async() => {

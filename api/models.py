@@ -30,7 +30,7 @@ class User(AbstractUser):
 class Ticket(models.Model):
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=1024)
-    state = models.CharField(choices=((1, "submitted"), (2, "working on"), (3, "resolved")), max_length=256, default=1)
+    state = models.CharField(choices=((1, "submitted"), (2, "working on"), (3, "resolved"), (4, "denied")), max_length=256, default=1)
     creation_date_time = models.DateTimeField(default=timezone.now)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="customer")             # on delete behaviour
     admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name="admin")                # on delete

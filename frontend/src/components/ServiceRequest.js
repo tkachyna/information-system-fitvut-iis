@@ -76,7 +76,6 @@ const ServiceRequest = (props) => {
       })
     }
 
-
     let getRequestComments = async() => {
       
         let response = await fetch(`api/getRequestComments?id=${props.item.id}`, {
