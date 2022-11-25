@@ -1,9 +1,8 @@
-import React, { Component, useContext } from 'react'
-import { Link } from "react-router-dom"
+import React, { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 import { Select }from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { MenuItem, FormControl, InputLabel, Alert }from '@mui/material';
+import { MenuItem }from '@mui/material';
 
 
 const User = (props) => {
@@ -13,8 +12,6 @@ const User = (props) => {
 
     let handleChange = async(event) => {
         const {value} = event.target
-
-        console.log(value)
         let response = await fetch(`api/editUserRole`, {
             method: 'POST',
             headers:{
@@ -57,7 +54,7 @@ const User = (props) => {
             </tr>
             </tbody>
         </table>
-
     )
   }
+  
 export default User

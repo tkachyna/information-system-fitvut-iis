@@ -1,6 +1,5 @@
-import React, { Component, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Link } from "react-router-dom"
 import { Button } from '@mui/material';
 import AuthContext from '../context/AuthContext'
 import TopicIcon from '@mui/icons-material/Topic';
@@ -10,7 +9,7 @@ const Ticket = (props) => {
 
     let navigate = useNavigate()
     let [numOfComments, setNumOfComments] = useState()
-    let {authTokens, logoutUser, user} = useContext(AuthContext)
+    let {authTokens, user} = useContext(AuthContext)
 
     useEffect(() => {
       getTicketComments()
@@ -39,11 +38,10 @@ const Ticket = (props) => {
           return 'Dokončeno'
         default:
           return 'Error'
-    }
-}
+      }
+  }
 
     
-
     let deleteTicket = async() => {
 
       let response = await fetch(`api/deleteTicket?id=${props.id}`, {
@@ -55,7 +53,6 @@ const Ticket = (props) => {
       })
 
       if (response.status == 200) {
-          console.log("Deleted")
           window.location.reload()
       } 
     }

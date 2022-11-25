@@ -17,7 +17,7 @@ import json
 from .serializers import ModelSerializer, TicketSerializer, UserSerializer
 from .models import Ticket, User, TicketComment, Request, RequestComment, Picture
 
-from sqlalchemy import create_engine, select, delete
+from sqlalchemy import create_engine, select, MetaData
 from sqlalchemy.orm import sessionmaker
 #make entities available as SQLAlchemy models
 User = User.sa
@@ -294,18 +294,20 @@ def postRequestComment(request):
     Session = sessionmaker(bind=db)
     session = Session()
     data = json.loads(request.body)
+    print(data)
     req = Request.sa
     request_comment = RequestComment.sa
     # valid user check
     u = session.query(User).filter(User.id == data['author_id'])
+    print(u[0].role)
     if u.count() == 0:
         #session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 3:  #change to manager (3)
+    if u[0].role not in [2,3]:  #change to manager (3)
         #session.close()
         db.dispose()
-        return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={'Incorrect user 2'}, status=status.HTTP_400_BAD_REQUEST)
     # valid request check
     r = session.query(req).filter(req.id == data['request_id'])
     if r.count() == 0:
@@ -351,10 +353,18 @@ def editRequest(request):
         return Response(data={'Incorrect request'}, status=status.HTTP_400_BAD_REQUEST)
     # technician assign check -not necessary?
     try:
-        if data['state']:
+        try:
             session.query(req).filter(req.id == data['id']).update({"state": data['state']})
-        elif data['estimated_time']:
+        except:
+            pass
+        try:
             session.query(req).filter(req.id == data['id']).update({"estimated_time": data['estimated_time']})
+        except:
+            pass
+        try:
+            session.query(req).filter(req.id == data['id']).update({"real_time": data['real_time']})
+        except:
+            pass
         session.commit()
         r = session.query(req).filter(req.id == data['id'])
         r_serialized = {c.name: getattr(r[0], c.name) for c in req.__table__.columns}
@@ -381,10 +391,12 @@ def getRequest(request):
     id = params['id']
     try:
         r = req.query().filter(req.id == id)[0]
+        tech = r.technicians
         data = {c.name: getattr(r, c.name) for c in req.__table__.columns}
+        data["t_id"] = [x.id for x in tech]
         return Response(data=data, status=status.HTTP_200_OK)
     except:
-        return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={"Invalid request id"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def getUsers(request):

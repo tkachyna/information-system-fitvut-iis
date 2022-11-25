@@ -1,24 +1,19 @@
 import React, { Component, useContext, useEffect, useState } from 'react'
-import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
-import { Select }from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { MenuItem, FormControl, InputLabel, Alert }from '@mui/material';
+import { Button, TextField, Alert } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import Spinner from '../components/Spinner';
+import AuthContext from '../context/AuthContext';
 
 const AddTicket = () => {
 
-    let {authTokens, logoutUser, user} = useContext(AuthContext) 
+    let {authTokens,  user} = useContext(AuthContext) 
 
     let [alertMessage, setAlertMessage] = useState("")
     let [alertCode, setAlertCode] = useState()
-    let [sentStatus, setSentStatus] = React.useState(0)
-    let [selectedDate, setSelectedDate] = React.useState(new Date())
-
     let [tickets, setTickets] = React.useState([])
     let [techs, setTechnicians] = React.useState([])
+    let [isLoaded, setIsLoaded] = useState(false)
 
     let navigate = useNavigate()
 
@@ -43,6 +38,7 @@ const AddTicket = () => {
         }
       })
     }
+
     let validateForm = () => {
 
         const arrayOfTechs = formData.technicians.split(",").map(Number);
@@ -116,6 +112,8 @@ const AddTicket = () => {
                     setTechnicians(oldData => [...oldData, data[i].id])
                 }
             }
+
+            setIsLoaded(true)
             
         } else {
             setAlertCode(1)
@@ -172,7 +170,10 @@ const AddTicket = () => {
     }     
   }
 
-    return (          
+    return (     
+        <div>  
+        {isLoaded
+        &&
         <table className='sr--table '>
             <tbody>
                 <tr><td>
@@ -209,8 +210,8 @@ const AddTicket = () => {
                     </Alert>
                     }
                 </td></tr>
-            <tr><td style={{fontSize: 25, height: 80, ml: 2}}>
-                Vytvoření servisního požadavku
+            <tr><td style={{ml: 2}}>
+                <h2>Vytvoření servisního požadavku</h2>
             </td></tr>
             <tr><td className='user--cell'>
                 <TextField
@@ -275,6 +276,12 @@ const AddTicket = () => {
             </td></tr>
         </tbody>
       </table>
+        }
+        {!isLoaded 
+        &&
+        <Spinner/>
+        }
+      </div>   
     )
 }
 

@@ -64,7 +64,7 @@ const HomePage = () => {
     {user.role == 2
     &&
     <div>
-    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Servisní požadavky</Button> 
+    <Button  href='/servicerequests2' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
     <br/>
     <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
     </div>
@@ -78,11 +78,11 @@ const HomePage = () => {
     <div>
     <Button  href='/addtechnician' type="submit" variant="outlined" sx = {style} >Přidat technického pracovníka</Button> 
     <br/>
-    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat nahlášené závady</Button>
+    <Button  href='/addrequest' type="submit" variant="outlined" sx = {style} >Vytvoření servisního požadavku  </Button> 
     <br/>
     <Button  href='/servicerequests2' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
     <br/>
-    <Button  href='/addrequest' type="submit" variant="outlined" sx = {style} >Vytvoření servisního požadavku  </Button> 
+    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat nahlášené závady</Button>
     <br/>
     <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
     </div>

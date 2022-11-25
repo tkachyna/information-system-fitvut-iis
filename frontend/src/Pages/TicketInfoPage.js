@@ -4,6 +4,7 @@ import { Button } from '@mui/material';
 import { useQuery } from 'react-query'
 import AuthContext from '../context/AuthContext';
 import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
+import ImageIcon from '@mui/icons-material/Image';
 import Ticket from '../components/Ticket';
 import { Select }from '@mui/material';
 import { MenuItem }from '@mui/material';
@@ -26,6 +27,7 @@ const TicketInfoPage = () => {
     let [ticket, setTicket] = useState([])
     let [ticketState, setTicketState] = useState("")
     let [ticketComment, setTicketComments] = useState([])
+    let [isLoaded, setIsLoaded] = useState(false)
 
     useEffect( () => {
        getTickets();
@@ -126,6 +128,11 @@ const TicketInfoPage = () => {
       )
   })
 
+  function formatDate(string){
+    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
+    return new Date(string).toLocaleDateString([],options);
+  }
+  
     return (
       <div>
         <div className='ticketinfopage--header' >Nahlášená závada</div>
@@ -172,8 +179,18 @@ const TicketInfoPage = () => {
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
-            21.11.2022
+            {formatDate(String(ticket.creation_date_time))}
             <br/>
+
+            <div className='ticketinfopage--icons-text'>
+            <ImageIcon className='ticketinfopage--icons'/>
+            <span>Fotografie</span>
+            </div>
+            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
+            <br/>
+            {formatDate(String(ticket.creation_date_time))}
+            <br/>
+
             <div className='ticketinfopage--icons-text'>
             <MessageIcon className='ticketinfopage--icons'/>
             <span>Komentáře</span>
@@ -188,7 +205,6 @@ const TicketInfoPage = () => {
             <br/>
 
         </div>
-        
       </div>
     )
   }

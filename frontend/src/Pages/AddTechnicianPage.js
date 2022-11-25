@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types'
-import React, { Component, useState, useEffect, useContext } from 'react'
-import Button from '@mui/material/Button';
-import AuthContext from '../context/AuthContext'
-import { List, Alert } from '@mui/material';
+import React, { useState, useEffect, useContext } from 'react'
+import { Alert } from '@mui/material';
 import User from '../components/User'
+import Spinner from '../components/Spinner';
+import AuthContext from '../context/AuthContext'
 
 const AddTechnicianPage = () => {
 
-    let {authTokens, logoutUser, user} = useContext(AuthContext)
+    let {authTokens} = useContext(AuthContext)
     let [users, setUsers] = useState([])
+    let [isLoaded, setIsLoaded] = useState(false)
  
     useEffect(() => {
         getListOfUsers()
@@ -27,38 +27,41 @@ const AddTechnicianPage = () => {
         console.log(data)
         if (response.status == 200) {
             for (let i = 0; i < data.length; i++) {
-
-              if(data[i].role == 1  || data[i].role == 2)   {
-                  setUsers(oldArray => [...oldArray, data[i]])
-              }
-              
+                if(data[i].role == 1  || data[i].role == 2)   {
+                    setUsers(oldArray => [...oldArray, data[i]])
+                }
             } 
-            console.log(data)
+            setIsLoaded(true)
         }
     }
 
-    let user_ = users.map(item => {
-      return (
-          <User
-              key={item.id}
-              user={item}
-          />
-      )
-  })
+    let users_ = users.map(item => {
+        return (
+            <User
+                key={item.id}
+                user={item}
+            />
+        )
+    })
 
 
   return (
     <div>
-      <Alert 
-            severity="info"
-            sx={{width: 470, ml: 2}}>
-            Můžeš měnit roli jen uživatelům s rolí nižší, než máš ty.
-        </Alert>
+    {isLoaded 
+    &&
+    <div>
       <h2 style={{marginLeft: 16}}>Seznam uživatelů</h2>
-      {user_}
+      <Alert severity="info" sx={{ m: 2, width: 510}}>Můžeš měnit roli jen uživatelům s rolí nižší, než máš ty.</Alert>
+      <Alert severity="info" sx={{ m: 2, width: 510}}>Druhý sloupec tabulky reprezentuje ID uživatele.</Alert>
+      {users_}
+    </div>
+    } 
+    {!isLoaded 
+    && 
+    <Spinner/>
+    }
     </div>
   )
-
 }
 
 export default AddTechnicianPage

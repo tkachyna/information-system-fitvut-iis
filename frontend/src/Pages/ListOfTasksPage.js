@@ -1,14 +1,13 @@
-import PropTypes from 'prop-types'
-import React, { Component, useState, useEffect, useContext } from 'react'
-import Button from '@mui/material/Button';
-import AuthContext from '../context/AuthContext'
-import { List } from '@mui/material';
+import React, { useState, useEffect, useContext } from 'react';
+import AuthContext from '../context/AuthContext';
+import Spinner from '../components/Spinner';
 import Ticket from '../components/Ticket';
 
 const ListOfTasksPage = () => {
 
   let {authTokens, logoutUser, user} = useContext(AuthContext)
   let [listOfTickets, setListOfTickets] = useState([])
+  let [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     getAllTickets()
@@ -24,9 +23,11 @@ const ListOfTasksPage = () => {
     })
     
     let data = await response.json()
-    console.log(data)
+
     if(response.status == 200) {
         setListOfTickets(data)
+        setIsLoaded(true)
+
     }
   }
 
@@ -44,6 +45,9 @@ const ListOfTasksPage = () => {
 })
 
   return (
+    <div>
+    {isLoaded 
+    &&
     <div>
         <h3 style={{margin: "0px 0px 16px 16px"}}>Seznam všech nahlášených závad</h3>
         <table className='ticket--table '>
@@ -66,8 +70,13 @@ const ListOfTasksPage = () => {
             {items}
         </div>
     </div>
+    } 
+    {!isLoaded 
+    && 
+    <Spinner/>
+    }
+    </div>
   )
-
 }
 
 export default ListOfTasksPage 

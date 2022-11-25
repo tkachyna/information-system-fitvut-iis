@@ -1,9 +1,9 @@
-import React, { Component, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Link } from "react-router-dom"
 import { Button } from '@mui/material';
-import AuthContext from '../context/AuthContext'
 import ConstructionIcon from '@mui/icons-material/Construction';
+import AuthContext from '../context/AuthContext'
+
 
 const ServiceRequest = (props) => {
 
@@ -16,16 +16,29 @@ const ServiceRequest = (props) => {
     }, [])
 
     let getColor = () => {
-        switch(props.state) {
-            case "Podáno":
+        switch(props.item.state) {
+            case '1':
               return {color: "#e60000"} 
-            case "V řešení":
+            case '2':
               return {color: "#ff9900"} 
-            case "Dokončeno":
+            case '3':
               return {color: "#33cc33"} 
             default:
               return {color: "#e60000"} 
         }
+    } 
+
+    let getState = () => {
+      switch(props.item.state) {
+        case '1':
+          return 'Podáno'
+        case '2':
+          return 'V řešení'
+        case '3':
+          return 'Dokončeno'
+        default:
+          return 'Error'
+    }
     }
 
     let deleteRequest = async() => {
@@ -40,7 +53,27 @@ const ServiceRequest = (props) => {
 
       if (response.status == 200) {
           window.location.reload()
+
+          if (props.item.state == '1' || props.item.state == '2') {
+              updateTicketState()
+          }
+          
       } 
+    }
+
+    let updateTicketState = async() => {
+      let response = await fetch(`api/editTicket`, {
+          method: 'POST',
+          headers:{
+              'Content-Type':'application/json',
+              'Authorization':'Bearer ' + String(authTokens.access)
+          },
+          body: JSON.stringify({
+            author_id: user.user_id,
+            id: props.item.ticket_id,
+            state: '1'
+          })
+      })
     }
 
 
@@ -71,10 +104,12 @@ const ServiceRequest = (props) => {
         <tbody>
           <tr>
             <td style={{width: 50}}><ConstructionIcon/></td> 
-            <td style={{width: 100}}>Požadavek {props.item.id} </td>
-            <td style={{width: 250}}> {formatDate(String(props.item.creation_date_time))}</td>
-            <td onClick={() => navigate(`/ticket?id=${props.item.ticket_id}`)} style={{width: 300}}><u>{props.item.ticket_id}</u> </td>
-            <td style={{width: 120}}><div style={getColor()}>{props.item.state}</div></td>
+            <td style={{width: 50}}>{props.item.id} </td>
+            <td style={{width: 230}}>{formatDate(String(props.item.creation_date_time))}</td>
+            <td style={{width: 150}}>{props.item.estimated_time}</td>
+            <td style={{width: 150}}>{props.item.real_time}</td>
+            <td onClick={() => navigate(`/ticket?id=${props.item.ticket_id}`)} style={{width: 100}}><u>{props.item.ticket_id}</u> </td>
+            <td style={{width: 120}}><div style={getColor()}>{getState()}</div></td>
             <td style={{width: 120}}>{numOfComments}</td>
             <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/servicerequest?id=${props.item.id}`)}>DETAILY</Button> </td>
             {user.role == 3 

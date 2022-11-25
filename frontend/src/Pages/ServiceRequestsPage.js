@@ -20,15 +20,30 @@ const ServiceRequestPage = () => {
     const query = useQuery();
     const id = query.get('id');
 
+    let [formData, setFormData] = useState({
+      esttime: null,
+      realtime: null,
+  })
+
     let {authTokens, user} = useContext(AuthContext)  
     let [request, setRequest] = useState([])
     let [requestState, setRequestState] = useState("")
     let [requestComment, setRequestComments] = useState([])
-    let [estDate, setEstDate] = useState(request.creation_date_time)
 
     useEffect( () => {
         getRequest()
+        
     }, [])
+
+    function handleChange3(event) {
+      const {name, value,} = event.target
+      setFormData(prevFormData => {
+          return {
+              ...prevFormData,
+              [name]: value
+          }
+      })
+  }
 
     let getColor = () => {
       switch(request.state) {
@@ -84,12 +99,19 @@ const ServiceRequestPage = () => {
         
         let data = await response.json()
         console.log(data)
+        console.log(data.t_id)
         if(response.status == 200) {
             setRequest(data)
             
             setRequestState(data.state)
 
             getrequestComments()
+            setFormData(prevFormData => {
+              return {
+                esttime: data.estimated_time,
+                realtime: data.real_time
+              }
+            })
         }
     }
 
@@ -133,6 +155,37 @@ const ServiceRequestPage = () => {
       }
   }
 
+  let updateEstTime = async(value) => {
+    let response = await fetch(`api/editRequest`, {
+        method: 'POST',
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization':'Bearer ' + String(authTokens.access)
+        },
+        body: JSON.stringify({
+          author_id: user.user_id,
+          id: request.id,
+          estimated_time: formData.esttime
+        })
+    })
+    
+}
+
+let updateRealTime = async(value) => {
+  let response = await fetch(`api/editRequest`, {
+      method: 'POST',
+      headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + String(authTokens.access)
+      },
+      body: JSON.stringify({
+        author_id: user.user_id,
+        id: request.id,
+        real_time: formData.realtime
+      })
+  })
+}
+
   const comments = requestComment.map(item => {
     return (
         <Comment
@@ -141,6 +194,19 @@ const ServiceRequestPage = () => {
         />
     )
 })
+
+let keyPress2 = (e) => {
+  if(e.key == 'Enter'){
+    updateEstTime()
+    // put the login here
+ }
+}
+
+let keyPress1 = (e) => {
+  if(e.key == 'Enter'){
+    updateRealTime()
+ }
+}
 
   function formatDate(string){
     var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
@@ -166,7 +232,7 @@ const ServiceRequestPage = () => {
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
-            <span className='light-text'> {request.ticket_id}</span>
+            <span className='light-text'> {request.t_id}</span>
             <br/>
 
 
@@ -176,12 +242,6 @@ const ServiceRequestPage = () => {
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
-            {user.role == 1
-            &&
-            <span style={getColor()}>{request.state}</span>
-            }
-            {user.role == 3
-            &&
             <Select
               labelId="state"
               id="state"
@@ -193,7 +253,7 @@ const ServiceRequestPage = () => {
               <MenuItem value={'2'}>V řešení</MenuItem>
               <MenuItem value={'3'}>Dokončeno</MenuItem>
             </Select>
-            }
+            
             <br/>
             <div className='ticketinfopage--icons-text'>
             <CommentIcon className='ticketinfopage--icons'/>
@@ -218,26 +278,25 @@ const ServiceRequestPage = () => {
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
             <TextField required
-            id="servicerequest-est" variant="outlined"
+            id="servicerequest-est" variant="outlined" onChange={handleChange3}  value={formData.esttime} onKeyDown={keyPress2}
             type="text" name="esttime"/>
             <br/>
+
             <div className='ticketinfopage--icons-text'>
             <AccessTimeFilledOutlinedIcon className='ticketinfopage--icons'/>
             <span>{"Reálný čas opravy (v hodinách)"}</span>
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
+    
             <TextField required
-            id="servicerequest-real" variant="outlined"
+            id="servicerequest-real" variant="outlined" onChange={handleChange3} value={formData.realtime} onKeyDown={keyPress1}
             type="text" name="realtime"/>
             <br/>
             <div className='ticketinfopage--icons-text'>
             <MessageIcon className='ticketinfopage--icons'/>
             <span>Komentáře</span>
-            {user.role === 3
-            &&
             <AddIcon className='ticketinfopage--icons-2' onClick={() => navigate2(`/createreqcomment?request_id=${id}`)}/>
-            }
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>

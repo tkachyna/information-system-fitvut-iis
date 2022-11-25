@@ -65,6 +65,7 @@ const AddRequestCommentPage = (props) => {
 
             } else {
                 setSentStatus(1)
+                console.log(data)
 
             }
         }
