@@ -267,6 +267,12 @@ def createRequest(request):
     # technician assign check -not necessary?
     try:
         r = req(description=data['description'], state=1, estimated_time=0, real_time=0, ticket_id=data['ticket_id'], creation_date_time=timezone.now())
+        t_data = data['technicians']
+        technics = t_data.split(",")
+        for i in range(len(technics)):
+            stmt = select(User).where(User.id == technics[i])
+            result = session.execute(stmt).all()
+            r.technicians.append(result[0][0])
         session.add(r)
         session.commit()
 
