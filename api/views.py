@@ -126,7 +126,7 @@ def createTicket(request):
     # print(data['text'])
     try:
         # kontrola, ze je customer citizen a admin spravce??
-        new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=31,
+        new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=1,
                       creation_date_time=timezone.now())
         # print(new_ticket.description)
         session.add(new_ticket)

@@ -31,9 +31,12 @@ header-button-log {
     border-radius: 10px;
 }
 
+
 .header--loggedas {
     font-size: 0.4cm;
     color: white;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .header--button-about{
@@ -46,6 +49,18 @@ header-button-log {
     border-radius: 10px;
     margin-left: auto;
 }
+
+.header--button-about{
+
+    padding: 10px 25px;
+    margin-right: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 10px;
+    margin-left: auto;
+}
+
 
 input {
     height: 30px;
