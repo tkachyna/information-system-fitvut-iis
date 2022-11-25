@@ -109,7 +109,12 @@ const EditAccountPage = () =>  {
 
 
   function validationPassword() {
-    if (formData.password != formData.password_again) {
+    if (formData.password == "" || formData.password_again == "") {
+        setAlertCode(ALERT_ERROR_2)
+        setAlertMessage("Vyplnte obe pole!")
+        return false;
+        
+    } else if (formData.password != formData.password_again) {
         setAlertCode(ALERT_ERROR_2)
         setAlertMessage("Nová hesla nejsou totožná!")
         return false;
@@ -139,6 +144,8 @@ const EditAccountPage = () =>  {
               username: answer.username,
               first_name: answer.first_name,
               last_name: answer.last_name,
+              password: '',
+              password_again: '',
               email: answer.email,
               city: answer.city,
               street: answer.street,
