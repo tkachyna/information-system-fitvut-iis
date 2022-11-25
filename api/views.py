@@ -54,16 +54,19 @@ def getRoutes(request):
 def regUser(request):
     from .models import User
     data = json.loads(request.body)
-    user = User.objects.create_user(
-                            username=data['user'],
-                            email=data['email'],
-                            password=data['password'],
-                            city=data['city'],
-                            street=data['street'],
-                            house_number=data['house_number'],
-                            zipcode=data['zipcode'],
-                            phone_number=data['phone_number'])
-    return HttpResponse()
+    try:
+        user = User.objects.create_user(
+                                username=data['user'],
+                                email=data['email'],
+                                password=data['password'],
+                                city=data['city'],
+                                street=data['street'],
+                                house_number=data['house_number'],
+                                zipcode=data['zipcode'],
+                                phone_number=data['phone_number'])
+        return Response(data={"Úspěšně zaregistrován"},status=status.HTTP_200_OK)
+    except:
+        return Response(data={"Uživatel s tímto jménem již existuje"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def getUserID(request):

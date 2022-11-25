@@ -49,7 +49,7 @@ const AddTicket = () => {
       if (validation) {
         console.log(user.user_id)
         console.log("valid success")
-        let response = await fetch(`api/createTicket?id=${user.user_id}`, {
+        let response = await fetch(`api/createTicket`, {
           method: 'POST',
           headers:{
               'Content-Type':'application/json',
