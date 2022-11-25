@@ -13,5 +13,7 @@ urlpatterns = [
     path('ticket', index),
     path('createcomment', index),
     path('addrequest', index),
-    path('servicerequests2', index)
+    path('servicerequests2', index),
+    path('servicerequest', index),
+    path('createreqcomment', index)
 ]

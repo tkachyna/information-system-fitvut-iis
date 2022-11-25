@@ -302,7 +302,7 @@ def postRequestComment(request):
         #session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 4:  #change to manager (3)
+    if u[0].role != 3:  #change to manager (3)
         #session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
@@ -339,7 +339,7 @@ def editRequest(request):
         # session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 4:  # change to manager (3)
+    if u[0].role != 3:  # change to manager (3)
         # session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
@@ -351,7 +351,10 @@ def editRequest(request):
         return Response(data={'Incorrect request'}, status=status.HTTP_400_BAD_REQUEST)
     # technician assign check -not necessary?
     try:
-        session.query(req).filter(req.id == data['id']).update({"description": data['description'], "state": data['state'], "estimated_time": data['estimated_time'], "real_time": data['real_time'], "ticket_id":data['ticket_id']})
+        if data['state']:
+            session.query(req).filter(req.id == data['id']).update({"state": data['state']})
+        elif data['estimated_time']:
+            session.query(req).filter(req.id == data['id']).update({"estimated_time": data['estimated_time']})
         session.commit()
         r = session.query(req).filter(req.id == data['id'])
         r_serialized = {c.name: getattr(r[0], c.name) for c in req.__table__.columns}

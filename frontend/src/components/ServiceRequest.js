@@ -5,7 +5,6 @@ import { Button } from '@mui/material';
 import AuthContext from '../context/AuthContext'
 import ConstructionIcon from '@mui/icons-material/Construction';
 
-
 const ServiceRequest = (props) => {
 
     let navigate = useNavigate()
@@ -13,7 +12,7 @@ const ServiceRequest = (props) => {
     let {authTokens, logoutUser, user} = useContext(AuthContext)
 
     useEffect(() => {
-      //getTicketComments()
+        getRequestComments()
     }, [])
 
     let getColor = () => {
@@ -40,15 +39,14 @@ const ServiceRequest = (props) => {
       })
 
       if (response.status == 200) {
-          console.log("Deleted")
           window.location.reload()
       } 
     }
 
 
-    let getTicketComments = async() => {
+    let getRequestComments = async() => {
       
-        let response = await fetch(`api/getTicketComments?id=${props.item.id}`, {
+        let response = await fetch(`api/getRequestComments?id=${props.item.id}`, {
           method: 'GET',
           headers:{
               'Content-Type':'application/json',
@@ -75,10 +73,10 @@ const ServiceRequest = (props) => {
             <td style={{width: 50}}><ConstructionIcon/></td> 
             <td style={{width: 100}}>Požadavek {props.item.id} </td>
             <td style={{width: 250}}> {formatDate(String(props.item.creation_date_time))}</td>
-            <td style={{width: 300}}> {props.item.name} </td>
+            <td onClick={() => navigate(`/ticket?id=${props.item.ticket_id}`)} style={{width: 300}}><u>{props.item.ticket_id}</u> </td>
             <td style={{width: 120}}><div style={getColor()}>{props.item.state}</div></td>
             <td style={{width: 120}}>{numOfComments}</td>
-            <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/ticket?id=${props.item.id}`)}>DETAILY</Button> </td>
+            <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/servicerequest?id=${props.item.id}`)}>DETAILY</Button> </td>
             {user.role == 3 
             &&
             <td style={{width: 100}}> <Button variant="outlined" onClick={deleteRequest}>SMAZAT</Button> </td>}

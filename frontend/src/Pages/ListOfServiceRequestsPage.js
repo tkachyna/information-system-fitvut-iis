@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component, useState, useEffect, useContext } from 'react'
-import Button from '@mui/material/Button';
+import { Button, Alert, AlertTitle }from '@mui/material';
 import AuthContext from '../context/AuthContext'
 import { List } from '@mui/material';
 import Ticket from '../components/Ticket';
@@ -43,6 +43,10 @@ const ListOfServiceRequestsPage = () => {
 
   return (
     <div>
+        <Alert sx={{ml: 2, mb: 2}} severity="info">
+        <AlertTitle>Tip</AlertTitle>
+        Zjisti podrobnější informace o tiketu kliknutím na jeho číslo v tabulce.
+        </Alert>
         <h3 style={{margin: "0px 0px 16px 16px"}}>Seznam servisních požadavků</h3>
         <table className='ticket--table '>
         <tbody>
@@ -50,7 +54,8 @@ const ListOfServiceRequestsPage = () => {
             <td style={{width: 50}}></td> 
             <td style={{width: 100}}>Čislo požadavku</td>
             <td style={{width: 250}}>Odhadovaná datum dokončení</td>
-            <td style={{width: 300}}>Název</td>
+            <td style={{width: 50}}>Tiket</td>
+            <td style={{width: 200}}>Servisní pracovníci</td>
             <td style={{width: 120}}>Stav</td>
             <td style={{width: 120}}>Komentáře</td>
             <td style={{width: 100}}></td>

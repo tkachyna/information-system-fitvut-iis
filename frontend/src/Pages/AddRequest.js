@@ -122,10 +122,26 @@ const AddTicket = () => {
             setAlertMessage(`Oops. Nastala chyba na serveru! (${response.status})`)
         }
       }  
+
+      let updateTicketState = async() => {
+
+        let response = await fetch(`api/editTicket`, {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization':'Bearer ' + String(authTokens.access)
+            },
+            body: JSON.stringify({
+              author_id: user.user_id,
+              id: formData.ticket,
+              state: "2"
+            })
+        })
+    }
     
 
     let postTicket = async() => {
-      
+
       let validation = await validateForm()
       if (validation) {
 
@@ -147,19 +163,16 @@ const AddTicket = () => {
       console.log(data)
       if(response.status == 200) {
           setAlertCode(200)
-             setAlertMessage("Servisní požadavek byl úspěšně zpracován!")
+            setAlertMessage("Servisní požadavek byl úspěšně zpracován!")
+            updateTicketState()
       } else {
           setAlertCode(1)
             setAlertMessage(`Oops. Nastala chyba na serveru: ${response.status} ${data}!`)
       }
-    }
-      
+    }     
   }
-  
 
-
-    return (    
-        
+    return (          
         <table className='sr--table '>
             <tbody>
                 <tr><td>
