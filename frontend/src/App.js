@@ -47,7 +47,7 @@ function App () {
             <Route  path="/createreqcomment" element={<AddRequestCommentPage/>}/>
             <Route  path="/createcomment" element={<AddTicketCommentPage/>}/>
             <Route  path="/servicerequests" element={<ListOfTasksPage />}/>
-            <Route  path="/*" element={<PrivateRoute> <HomePage /> </PrivateRoute>}/>
+            <Route  path="*" element={<PrivateRoute> <HomePage /> </PrivateRoute>}/>
             <Route  path="/signup" element={<SignupPage/>}/>
               <Route path="/login" element={<LoginPage/>}/>
               {/* <Route path="/" element={<p>funguj</p>}/>

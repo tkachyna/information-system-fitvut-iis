@@ -12,7 +12,7 @@ const AddTicket = () => {
           text: "",
           creation_time_date: "",
           author_id: "",
-          photo: "",
+          url: "",
       }
     ) 
 
@@ -26,9 +26,8 @@ const AddTicket = () => {
       })
     }
     
-    let {authTokens, logoutUser, user} = useContext(AuthContext) 
+    let {authTokens, user} = useContext(AuthContext) 
     const [sentStatus, setSentStatus] = React.useState(0)
-    const [selectedDate, setSelectedDate] = React.useState(new Date())
 
     let validateForm = () => {
         if(formData.title !== "" && formData.description !== "") {
@@ -57,11 +56,10 @@ const AddTicket = () => {
           },
           body: JSON.stringify({
             id: user.user_id,
-            url: "",
+            url: formData.url,
             name: formData.title,
             description: formData.text,
             creation_time_date: formData.creation_time_date,
-            photo: formData.photo,
           })
       })
       
@@ -135,16 +133,14 @@ const AddTicket = () => {
             value={formData.text}
           />
           <br/>
-          <p className='signup--text-2'>Čas nahlášení</p>
-          <div className='reportticker--timer'>
-            <input type="datetime-local" id="creation_time_date" name="creation_time_date"/>
-          </div>
-          <br/>
           <p className='signup--text-2'>Fotografie</p>
           <TextField
             style={{textAlign: 'left'}}
+            onChange={handleChange}
             placeholder='Můžete přiložit obrázek (pouze URL)'
             rows={1}
+            name="url"
+            value={formData.url}
             sx={{ width: 500, ml: 2 }}
           />
           </form>

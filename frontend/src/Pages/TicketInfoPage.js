@@ -1,19 +1,15 @@
-import React, { Component, useContext, useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Button } from '@mui/material';
-import { useQuery } from 'react-query'
-import AuthContext from '../context/AuthContext';
+import React, {  useContext, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
+import { Select, MenuItem, Divider }from '@mui/material';
 import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
 import ImageIcon from '@mui/icons-material/Image';
-import Ticket from '../components/Ticket';
-import { Select }from '@mui/material';
-import { MenuItem }from '@mui/material';
 import MessageIcon from '@mui/icons-material/Message';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import AddIcon from '@mui/icons-material/Add';
-import { Divider } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
 import Comment from '../components/Comment';
+import Spinner from '../components/Spinner';
+import AuthContext from '../context/AuthContext';
 
 const TicketInfoPage = () => {
 
@@ -30,7 +26,7 @@ const TicketInfoPage = () => {
     let [isLoaded, setIsLoaded] = useState(false)
 
     useEffect( () => {
-       getTickets();
+       getTicket();
     }, [])
 
     let getColor = () => {
@@ -49,13 +45,10 @@ const TicketInfoPage = () => {
     function handleChange(event) {
       const {value} = event.target
       updateTicketState(value)
-      console.log(value)
     }
 
 
-    let getTicketComments = async() => {
-      console.log("g")
-      
+    let getTicketComments = async() => {      
         let response = await fetch(`api/getTicketComments?id=${id}`, {
           method: 'GET',
           headers:{
@@ -65,15 +58,14 @@ const TicketInfoPage = () => {
       })
 
       let data = await response.json()
-      console.log(data)
+
       if (response.status == 200) {
           setTicketComments(data)
-          
-          console.log(data)
+          setIsLoaded(true)
       }
     }
     
-    let getTickets = async() => {
+    let getTicket = async() => {
         let response = await fetch(`api/getTicket?id=${id}`, {
             method: 'GET',
             headers:{
@@ -83,12 +75,11 @@ const TicketInfoPage = () => {
         })
         
         let data = await response.json()
-        console.log(data)
+
         if(response.status == 200) {
             setTicket(data)
             
             setTicketState(data.state)
-            console.log(ticketState)
             getTicketComments()
         }
     }
@@ -108,12 +99,10 @@ const TicketInfoPage = () => {
       })
       
       let data = await response.json()
-      console.log(data)
+
       if(response.status == 200) {
           setTicket(data)
-          
           setTicketState(data.state)
-          console.log(ticketState)
           getTicketComments()
       }
   }
@@ -135,8 +124,11 @@ const TicketInfoPage = () => {
   
     return (
       <div>
-        <div className='ticketinfopage--header' >Nahlášená závada</div>
-        <div className='ticketinfopage--name'>{ticket.name} </div>   
+      {isLoaded 
+      &&
+      <div>
+        <h2 style={{marginLeft: 16}}>Nahlášená závada</h2>
+        <h3 style={{marginLeft: 16}}>Název: {ticket.name} </h3>   
         <div className='ticketinfopage--wrapper'>
             
 
@@ -188,7 +180,7 @@ const TicketInfoPage = () => {
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
-            {formatDate(String(ticket.creation_date_time))}
+            <img style={{width: 500}} src={ticket.url}/>
             <br/>
 
             <div className='ticketinfopage--icons-text'>
@@ -205,6 +197,12 @@ const TicketInfoPage = () => {
             <br/>
 
         </div>
+      </div>
+      } 
+      {!isLoaded 
+      && 
+      <Spinner/>
+      }
       </div>
     )
   }

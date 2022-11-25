@@ -195,7 +195,13 @@ def getTicket(request):
     id = params['id']
     try:
         t = ticket.query().filter(ticket.id == id)[0]
+        picture = Picture.sa
+        p = picture.query().filter(picture.ticket_id == id)
         data = {c.name: getattr(t, c.name) for c in ticket.__table__.columns}
+        if p.count() == 0:
+            data['url'] = ""
+        else:
+            data['url'] = p.first().url
         return Response(data=data, status=status.HTTP_200_OK)
     except:
         return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
