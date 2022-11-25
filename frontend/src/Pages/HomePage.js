@@ -4,10 +4,12 @@ import Button from '@mui/material/Button';
 import AuthContext from '../context/AuthContext'
 import { Alert, AlertTitle } from '@mui/material';
 import { Link } from 'react-router-dom'
+import Spinner from '../components/Spinner';
 
 const HomePage = () => {
 
   let {authTokens, logoutUser, user} = useContext(AuthContext)
+  let [isLoaded, setIsLoaded] = useState(false)
   let [fact, setFact] = useState([])
   useEffect(() => {
     getRandomFact()
@@ -32,10 +34,14 @@ const HomePage = () => {
 
     let data = await response.json()
     setFact(data[0].fact)
+    setIsLoaded(true)
   }
 
 
   return (
+    <div>
+    {isLoaded 
+    &&
     <div>
     <Alert 
           severity="info"
@@ -83,7 +89,12 @@ const HomePage = () => {
     }
     <img style={{width: 500, borderRadius: 25}} src="https://1884403144.rsc.cdn77.org/foto/cernobile-hvezdy-kazde-zoo/Zml0LWluLzk5OXg5OTkvZmlsdGVyczpxdWFsaXR5KDg1KTpub191cHNjYWxlKCkvaW1n/4868416.jpg?v=0&st=cUz5BygWyqeXLmURARtP8kpRec-oggNila2-nNa_ocM&ts=1600812000&e=0"/>
     </div>
-
+    }
+    {!isLoaded 
+    &&
+    <Spinner/>
+    }
+    </div>
   )
 
 }

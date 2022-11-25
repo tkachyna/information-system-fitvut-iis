@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, CSSProperties } from 'react'
 import AuthContext from '../context/AuthContext'
 import { Button, Alert, Divider, TextField } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
 const EditAccountPage = () =>  {
 
@@ -14,6 +15,7 @@ const EditAccountPage = () =>  {
   let [alertCode, setAlertCode] = useState()
   let [open, setOpen] = useState(false)
   let [toDelete, setToDelete] = useState(false)
+  let [isLoaded, setIsLoaded] = useState(false)
 
   const ALERT_ERROR_40x_50x = 400
   const ALERT_SUCCESS = 200
@@ -21,6 +23,7 @@ const EditAccountPage = () =>  {
   const ALERT_ERROR = 3
   const ALERT_SUCCESS_2 = 4
   const ALERT_ERROR_2 = 5
+   
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -113,7 +116,7 @@ const EditAccountPage = () =>  {
         setAlertCode(ALERT_ERROR_2)
         setAlertMessage("Vyplnte obe pole!")
         return false;
-        
+
     } else if (formData.password != formData.password_again) {
         setAlertCode(ALERT_ERROR_2)
         setAlertMessage("Nová hesla nejsou totožná!")
@@ -154,6 +157,8 @@ const EditAccountPage = () =>  {
               phone_number: answer.phone_number
             }
           })
+
+          setIsLoaded(true)
 
       } else {
         setAlertCode(ALERT_ERROR_40x_50x)
@@ -246,7 +251,11 @@ const EditAccountPage = () =>  {
     ml: 2
   } 
 
+
   return (
+    <div>
+    {isLoaded
+    &&
     <div className='form-signup'>
       {alertCode == ALERT_SUCCESS
       &&
@@ -414,6 +423,12 @@ const EditAccountPage = () =>  {
         </DialogActions>
       </Dialog>
     </div>
+  }
+  {!isLoaded 
+  &&
+  <Spinner/>
+  }
+  </div>
   )
   
 

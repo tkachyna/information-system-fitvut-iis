@@ -245,3 +245,13 @@ a:link, a:visited {
     border-color: #2074d4;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
+
+.spinner {
+    display: block;
+    position: fixed;
+    z-index: 1031; /* High z-index so it is on top of the page */
+    top: 50%;
+    right: 50%; /* or: left: 50%; */
+    margin-top: 40px; /* half of the elements height */
+    margin-right: 40px; /* half of the elements width */
+  }
