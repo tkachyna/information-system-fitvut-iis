@@ -1,178 +1,179 @@
-import PropTypes from 'prop-types'
-import React, { Component, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AuthContext from '../context/AuthContext'
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import { Link } from 'react-router-dom'
-import { Alert, Divider } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Button, Alert, Divider, TextField } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const EditAccountPage = () =>  {
 
-  let {authTokens, user} = useContext(AuthContext)
+  let {authTokens, user, logoutUser} = useContext(AuthContext)
 
   let navigate = useNavigate()
 
-  let [sent, setSent] = React.useState(false)
   let [alertMessage, setAlertMessage] = useState("")
   let [alertCode, setAlertCode] = useState()
   let [open, setOpen] = useState(false)
+  let [toDelete, setToDelete] = useState(false)
+
+  const ALERT_ERROR_40x_50x = 400
+  const ALERT_SUCCESS = 200
+  const ALERT_WARNING = 2
+  const ALERT_ERROR = 3
+  const ALERT_SUCCESS_2 = 4
+  const ALERT_ERROR_2 = 5
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseYes = () => {
+    setOpen(false)
+    setToDelete(true)
+    logoutUser()
     navigate("/login")
   };
 
-  const [formData, setFormData] = React.useState(
-    {
-      firstname: "",
-      lastname: "",
+  const handleCloseNo = () => {
+    setOpen(false);
+  };
+
+  const [formData, setFormData] = React.useState({ 
       username: "",
       password: "",
-      oldpassword: "",
-      password2: "",
-      password2check: "",
-      email2: "",
+      first_name: "",
+      last_name: "",
+      password: "",
+      password_again: "",
+      email: "",
       city: "",
       street: "",
-      housenum: "",
+      house_number: "",
       zipcode: "",
-      phone: ""
+      phone_number: ""
     }
   )
 
   useEffect(() => {
-    setSent(false)
-    sendUserID()
+      getUser()
   }, [])
 
   function handleChange(event) {
-    const {name, value, type} = event.target
-    setFormData(prevFormData => {
-      return {
-        ...prevFormData,
-        [name]: value
-      }
-    })
+      const {name, value} = event.target
+      setFormData(prevFormData => {
+          return {
+              ...prevFormData,
+              [name]: value
+          }
+      })
   }
-  // formDataValues = Object.values(formData)
-
-  //     if (formDataValues.some((e) => (e == ""))) {
-  //         console.log("test")
-  //     }
 
   function validation() {
 
-      console.log(formData.zipcode)
-      let regexHouseNumber = "\d+"
-      let regexZipCode = "\d{3} \d{2}" 
-      let regexPhoneNumber = "\d{9}"
-      let regexHouseNumberResult = regexHouseNumber.test(formData.housenum)
+      let regexHouseNumber = new RegExp(/^\d+$/)
+      let regexZipCode = new RegExp(/^\d{3} \d{2}$/) 
+      let regexPhoneNumber = new RegExp(/^\d{9}$/)
+
+      let regexHouseNumberResult = regexHouseNumber.test(formData.house_number)
       let regexZipCodeResult = regexZipCode.test(formData.zipcode)
-      let regexPhoneNumberResult = regexPhoneNumber.test(formData.phone)
+      let regexPhoneNumberResult = regexPhoneNumber.test(formData.phone_number)
 
       if (formData.username == "") {
-        setAlertCode(3)
+        setAlertCode(ALERT_ERROR)
         setAlertMessage("Pole Uživatelské jméno nesmí být prázdné!")
         return false
 
-      } else if (formData.email2 == "") {
-        setAlertCode(3)
+      } else if (formData.email == "") {
+        setAlertCode(ALERT_ERROR)
         setAlertMessage("Pole Email nesmí být prázdné!")
         return false
 
-      // } else if (!regexHouseNumberResult) {
-      //   setAlertCode(3)
-      //   setAlertMessage("Regulární výraz pro Číslo popisné selhal! (musí obsahovat pouze čísla)")
-      //   return false
+      } else if (formData.house_number != "" && !regexHouseNumberResult) {
+        setAlertCode(ALERT_ERROR)
+        setAlertMessage("Regulární výraz pro Číslo popisné selhal! (musí obsahovat pouze čísla)")
+        return false
 
-      } else if (!regexZipCodeResult) {
-        setAlertCode(3)
+      } else if (formData.zipcode != "" && !regexZipCodeResult) {
+        setAlertCode(ALERT_ERROR)
         setAlertMessage("Regulární výraz pro PSČ selhal! (správný tvar: XXX XX)")
         return false
         
-      } else if (!regexPhoneNumberResult) {
-        setAlertCode(3)
+      } else if (formData.phone_number != "" && !regexPhoneNumberResult) {
+        setAlertCode(ALERT_ERROR)
         setAlertMessage("Regulární výraz pro Telefonní číslo selhal!")
         return false
         
+      } else { 
+        return true
       }
-  }
-
-
-  let sendUserID = async() => {
-
-
-        let response = await fetch("api/getUserID/", {
-          method: 'POST',
-          headers: {
-              'Content-Type':'application/json',
-              'Authorization':'Bearer ' + String(authTokens.access)
-          },
-          body: JSON.stringify({'id': user.user_id })
-      })
-
-      
-
-      let answer = await response.json();
-      setFormData(prevFormData => {
-        return {
-          username: answer.username,
-          firstname: answer.first_name,
-          lastname: answer.last_name,
-          password: answer.password,
-          email2: answer.email,
-          city: answer.city,
-          street: answer.street,
-          housenum: answer.house_number,
-          zipcode: answer.zipcode,  
-          phone: answer.phone_number
-        }
-      })
-      
-      
   }
 
 
   function validationPassword() {
+    if (formData.password != formData.password_again) {
+        setAlertCode(ALERT_ERROR_2)
+        setAlertMessage("Nová hesla nejsou totožná!")
+        return false;
+  
+      } else {
+        return true;
 
-  if (formData.password2 !== formData.password2check) {
-      setAlertCode(5)
-      setAlertMessage("Nová hesla nejsou totožná!")
-      return false;
-
-    } else {
-      return true;
-    }
+      }
   }
+
+
+  let getUser = async() => {
+        let response = await fetch("api/getUserID/", {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json',
+                'Authorization':'Bearer ' + String(authTokens.access)
+            },
+            body: JSON.stringify({'id': user.user_id })
+      })
+
+      let answer = await response.json();
+
+      if (response.status == 200) {
+          setFormData(prevFormData => {
+            return {
+              username: answer.username,
+              first_name: answer.first_name,
+              last_name: answer.last_name,
+              email: answer.email,
+              city: answer.city,
+              street: answer.street,
+              house_number: answer.house_number,
+              zipcode: answer.zipcode,  
+              phone_number: answer.phone_number
+            }
+          })
+
+      } else {
+        setAlertCode(ALERT_ERROR_40x_50x)
+        setAlertMessage("Oops. Něco se pokazilo!")
+
+      }
+  }
+
 
   let deleteAccount = async() => { 
-    handleClickOpen()
-    let response = await fetch(`api/deleteAccount`, {
-      method:'POST',
-      headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer ' + String(authTokens.access)
-      },
-      body: JSON.stringify({
-        id: user.user_id
-      })
-    })
-
-
+      handleClickOpen()
+      if (toDelete) {
+          let response = await fetch(`api/deleteAccount`, {
+              method:'POST',
+              headers:{
+                  'Content-Type':'application/json',
+                  'Authorization':'Bearer ' + String(authTokens.access)
+              },
+              body: JSON.stringify({
+                  id: user.user_id
+              })
+          })
+      }
   }
 
-  let changePassword = async() => {
 
+  let changePassword = async() => {
     let valid = validationPassword() 
     if (valid) {
       let response = await fetch('api/changePassword', {
@@ -183,54 +184,52 @@ const EditAccountPage = () =>  {
           },
           body: JSON.stringify({ 
             id: user.user_id,
-            password: formData.password2
+            password: formData.password
           })
       })
 
       if (response.status == 200) {
-        setAlertCode(4)
+        setAlertCode(ALERT_SUCCESS_2)
         setAlertMessage("Heslo úspěšně změněno!")
       } else {
-        setAlertCode(5)
+        setAlertCode(ALERT_ERROR_2)
         setAlertMessage("Oops. Něco se nepodařilo")
       }
     }
   }
   
 
-  let getUserInfo = async() =>{
-
-    let valid = validation()
-
+  let changeUserInfo = async() =>{
+      let valid = validation()
       if (valid) {
-      let response = await fetch('api/changeUserInfo/', {
-          method:'POST',
-          headers:{
-              'Content-Type':'application/json',
-              'Authorization':'Bearer ' + String(authTokens.access)
-          },
-          body: JSON.stringify({ 
-            user: formData.username, 
-            first_name: formData.firstname,
-            last_name: formData.lastname,
-            email: formData.email2,
-            city:formData.city,
-            street: formData.street,
-            house_number: formData.housenum,
-            zipcode: formData.zipcode,
-            phone_number: formData.phone
+          let response = await fetch('api/changeUserInfo/', {
+              method:'POST',
+              headers:{
+                  'Content-Type':'application/json',
+                  'Authorization':'Bearer ' + String(authTokens.access)
+              },
+              body: JSON.stringify({ 
+                user: formData.username, 
+                first_name: formData.first_name,
+                last_name: formData.last_name,
+                email: formData.email,
+                city:formData.city,
+                street: formData.street,
+                house_number: formData.house_number,
+                zipcode: formData.zipcode,
+                phone_number: formData.phone_number
+              })
           })
-      })
 
-      if (response.status == 200) {
-        setSent(true)
-      } else {
-        alert("Něco se nepodařilo.")
+          if (response.status == 200) {
+              setAlertCode(ALERT_SUCCESS)
+              setAlertMessage("Uživatelské údaje úspěšně změněny!")
+
+          } else {
+              setAlertCode(ALERT_ERROR_40x_50x)
+              setAlertMessage("Oops. Něco se nepodařilo")
+          }   
       }
-      
-      
-    }
-    
   }
 
   let style = {
@@ -242,7 +241,7 @@ const EditAccountPage = () =>  {
 
   return (
     <div className='form-signup'>
-      {alertCode == 200 
+      {alertCode == ALERT_SUCCESS
       &&
       <Alert
           severity="success"
@@ -250,7 +249,7 @@ const EditAccountPage = () =>  {
           {alertMessage}
       </Alert>
       }
-      {alertCode == 3
+      {alertCode == ALERT_ERROR_40x_50x
       &&
       <Alert 
           severity="error"
@@ -258,7 +257,7 @@ const EditAccountPage = () =>  {
           {alertMessage}
       </Alert>
       }
-      {alertCode == 2
+      {alertCode == ALERT_WARNING
       &&
       <Alert 
           severity="warning"
@@ -266,7 +265,7 @@ const EditAccountPage = () =>  {
           {alertMessage}
       </Alert>
       }
-      {alertCode == 1
+      {alertCode == ALERT_ERROR
       &&
       <Alert 
           severity="error"
@@ -277,68 +276,67 @@ const EditAccountPage = () =>  {
       
       <h3 style={{marginLeft: 16}}>Změna uživatelských údajů</h3>
       <form>
-          <TextField required id="outlined-basic" label='Uživatelské jméno' variant="outlined" placeholder='Uživatelské jméno' sx = {style}
+          <TextField required id="textfiled-username" label='Uživatelské jméno' variant="outlined" placeholder='Uživatelské jméno' sx = {style}
             onChange={handleChange}
             name="username"
             value={formData.username}
           />
-          <TextField required id="outlined-basic" label='Email' variant="outlined" type="email" placeholder="Email" sx = {style}
-            name="email2"
+          <TextField required id="textfiled-email" label='Email' variant="outlined" type="email" placeholder="Email" sx = {style}
+            name="email"
             onChange={handleChange} 
-            value={formData.email2}
+            value={formData.email}
           />
           <br/>
           <Divider sx={{m: 2}}/>
           <br/>
-          <TextField id="outlined-basic" label='Jméno' variant="outlined" placeholder='Jméno' sx = {style}
+          <TextField id="textfiled-first_name" label='Jméno' variant="outlined" placeholder='Jméno' sx = {style}
             onChange={handleChange}
-            name="firstname"
-            value={formData.firstname}
+            name="first_name"
+            value={formData.first_name}
           />
-          <TextField id="outlined-basic" label='Příjmení' variant="outlined" placeholder="Příjmení" sx = {style}
-            name="lastname"
+          <TextField id="textfiled-last_name" label='Příjmení' variant="outlined" placeholder="Příjmení" sx = {style}
+            name="last_name"
             onChange={handleChange} 
-            value={formData.lastname}
+            value={formData.last_name}
           />
           <br/>
-          <TextField  id="outlined-basic" label='Město' variant="outlined" type="text" placeholder='Město' sx = {style}  
+          <TextField  id="textfiled-city" label='Město' variant="outlined" type="text" placeholder='Město' sx = {style}  
             name="city" 
             onChange={handleChange}
             value={formData.city}
           />
-          <TextField  id="outlined-basic" label='Ulice' variant="outlined" type="text" placeholder='Ulice' sx = {style}  
+          <TextField  id="textfiled-street" label='Ulice' variant="outlined" type="text" placeholder='Ulice' sx = {style}  
             name="street" 
             onChange={handleChange}
             value={formData.street}
           />
-          <TextField  id="outlined-basic" label='Číslo popisné' variant="outlined" type="text" placeholder='Číslo popisné' sx = {style}  
-            name="housenum" 
+          <TextField  id="textfiled-house_number" label='Číslo popisné' variant="outlined" type="text" placeholder='Číslo popisné' sx = {style}  
+            name="house_number" 
             onChange={handleChange}
-            value={formData.housenum}
+            value={formData.house_number}
           />
-          <TextField  id="outlined-basic" label='PSČ' variant="outlined" type="text" placeholder='PSČ' sx = {style}  
+          <TextField  id="textfiled-zipcode" label='PSČ' variant="outlined" type="text" placeholder='PSČ' sx = {style}  
             name="zipcode" 
             onChange={handleChange}
             value={formData.zipcode}
           />
-          <TextField  id="outlined-basic" label='Telefonní číslo' variant="outlined" type="text" placeholder='Telefonní číslo' sx = {style}  
-            name="phone" 
+          <TextField  id="textfiled-phone_number" label='Telefonní číslo' variant="outlined" type="text" placeholder='Telefonní číslo' sx = {style}  
+            name="phone_number" 
             onChange={handleChange}
-            value={formData.phone}
+            value={formData.phone_number}
           />
           <br></br>
           <Button 
 
-            onClick={getUserInfo} 
+            onClick={changeUserInfo} 
             variant="contained"
             sx = {style}
             >Potvrdit</Button>
           <br/>
-          
-          {sent && <h3 style={{color: "#008000", padding: "0px 0px 0px 20px"}} >Údaje byly úspěšně změněny!</h3>}
+        
       </form>
       <br/>
-      {alertCode == 4
+      {alertCode == ALERT_SUCCESS_2
       &&
       <Alert 
           severity="success"
@@ -346,7 +344,7 @@ const EditAccountPage = () =>  {
           {alertMessage}
       </Alert>
       }
-      {alertCode == 5
+      {alertCode == ALERT_ERROR_2
       &&
       <Alert 
           severity="error"
@@ -355,16 +353,16 @@ const EditAccountPage = () =>  {
       </Alert>
       }
       <h3 style={{marginLeft: 16}}>Změna hesla</h3>
-          <TextField required id="outlined-basic" type="password" label='Nové heslo' variant="outlined" placeholder="Nové heslo" sx = {style}
-            name="password2"
+          <TextField required id="textfiled-password" type="password" label='Nové heslo' variant="outlined" placeholder="Nové heslo" sx = {style}
+            name="password"
             onChange={handleChange} 
-            value={formData.password2}
+            value={formData.password}
           />
        
-          <TextField required id="outlined-basic" type="password" label='Nové heslo znovu' variant="outlined" placeholder='Nové heslo znovu' sx = {style}  
-            name="password2check" 
+          <TextField required id="textfiled-password_check" type="password" label='Nové heslo znovu' variant="outlined" placeholder='Nové heslo znovu' sx = {style}  
+            name="password_again" 
             onChange={handleChange}
-            value={formData.password2check}
+            value={formData.password_again}
           />
           <br></br>
           <Button 
@@ -388,7 +386,7 @@ const EditAccountPage = () =>  {
           <br/>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={handleCloseNo}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -402,8 +400,8 @@ const EditAccountPage = () =>  {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Ne</Button>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={handleCloseNo}>Ne</Button>
+          <Button onClick={handleCloseYes} autoFocus>
             Ano
           </Button>
         </DialogActions>
