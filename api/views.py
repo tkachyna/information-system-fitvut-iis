@@ -17,7 +17,7 @@ import json
 from .serializers import ModelSerializer, TicketSerializer, UserSerializer
 from .models import Ticket, User, TicketComment, Request, RequestComment, Picture
 
-from sqlalchemy import create_engine, select, delete
+from sqlalchemy import create_engine, select, MetaData
 from sqlalchemy.orm import sessionmaker
 #make entities available as SQLAlchemy models
 User = User.sa
@@ -378,10 +378,12 @@ def getRequest(request):
     id = params['id']
     try:
         r = req.query().filter(req.id == id)[0]
+        tech = r.technicians
         data = {c.name: getattr(r, c.name) for c in req.__table__.columns}
+        data["t-id"] = [x.id for x in tech]
         return Response(data=data, status=status.HTTP_200_OK)
     except:
-        return Response(data={"Invalid ticket id"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={"Invalid request id"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def getUsers(request):
