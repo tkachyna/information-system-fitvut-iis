@@ -14,13 +14,29 @@ const ListOfTicketsPage = () => {
 	},[])
 
 	let getAllTickets = async() => {
-		let response = await fetch(`api/getTickets`, {
-			method: 'GET',
-			headers:{
-				'Content-Type':'application/json',
-				'Authorization':'Bearer ' + String(authTokens.access)
-			}
-		})
+
+		let response
+		
+		if (user.role == 1) {
+			response = await fetch(`api/getMyTickets?id=${user.user_id}`, {
+				method: 'GET',
+				headers:{
+					'Content-Type':'application/json',
+					'Authorization':'Bearer ' + String(authTokens.access)
+				}
+			})
+
+		} else {
+
+			response = await fetch(`api/getTickets`, {
+				method: 'GET',
+				headers:{
+					'Content-Type':'application/json',
+					'Authorization':'Bearer ' + String(authTokens.access)
+				}
+			})
+		}
+			
 	
 		let data = await response.json()
 
@@ -56,7 +72,7 @@ const ListOfTicketsPage = () => {
 				<td style={{width: 120}}>Stav</td>
 				<td style={{width: 120}}>Komentáře</td>
 				<td style={{width: 100}}></td>
-				{user.role == 3 || user.role == 4 &&
+				{(user.role == 3 || user.role == 4)&&
 				<td style={{width: 100}}>  </td>
 				}
 				</tr>
