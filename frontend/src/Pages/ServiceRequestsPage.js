@@ -124,7 +124,7 @@ const ServiceRequestPage = () => {
         if (response.status == 200) {
             console.log(data)
             for (let i = 0; i < data.length; i++) {
-                if (t_id.indexOf(data[i].id) >= 0) {
+                if (t_id.indexOf(data[i].id) >= 0 && data[i].role == 2) {
                     setTechnicians(oldData => [...oldData, data[i]])
                 }
             }
@@ -202,9 +202,10 @@ const ServiceRequestPage = () => {
       let data = await response.json()
 
       if (response.status == 200) {
-            for (let i = 0; i < data.length; i++) {
-
-                if(data[i].id == props.item.author_id)   {
+            for (let i = 0; i< data.length; i++) {
+                console.log(data[i])
+                if(data[i].id == props.item.author_id && data[i].role == 2) {
+                    console.log(data[i].role)
                     setName(data[i].username)
                 }
                 
