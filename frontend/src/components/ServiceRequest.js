@@ -111,7 +111,7 @@ const ServiceRequest = (props) => {
             <td style={{width: 120}}><div style={getColor()}>{getState()}</div></td>
             <td style={{width: 120}}>{numOfComments}</td>
             <td style={{width: 100}}> <Button variant="outlined" onClick={() => navigate(`/servicerequest?id=${props.item.id}`)}>DETAILY</Button> </td>
-            {user.role == 3 || user.role == 4
+            {(user.role == 3 || user.role == 4)
             &&
             <td style={{width: 100}}> <Button variant="outlined" onClick={deleteRequest}>SMAZAT</Button> </td>}
           </tr>

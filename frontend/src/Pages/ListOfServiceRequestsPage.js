@@ -62,7 +62,7 @@ const ListOfServiceRequestsPage = () => {
                 <td style={{width: 120}}>Stav</td>
                 <td style={{width: 120}}>Komentáře</td>
                 <td style={{width: 100}}></td>
-                {user.role == 3 || user.role == 4
+                {(user.role == 3 || user.role == 4)
                 &&
                 <td style={{width: 100}}>  </td>}
             </tr>
