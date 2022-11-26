@@ -148,7 +148,7 @@ const TicketInfoPage = () => {
 
 				<div className='ticketinfopage--icons-text'>
 					<AccessAlarmIcon className='ticketinfopage--icons'/>
-					<span>Stav</span>
+					<span style={{color: "#2074d4"}}>Stav</span>
 				</div>
 				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
 				<br/>
@@ -161,6 +161,7 @@ const TicketInfoPage = () => {
 				<Select
 					labelId="state"
 					id="state"
+					size="small"
 					value={ticketState}
 					label="state"
 					onChange={handleChange}>
@@ -174,7 +175,7 @@ const TicketInfoPage = () => {
 
 				<div className='ticketinfopage--icons-text'>
 					<CommentIcon className='ticketinfopage--icons'/>
-					<span className='light-text' >Popis</span>
+					<span style={{color: "#2074d4"}} >Popis</span>
 				</div>
 				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
 				<br/>
@@ -183,7 +184,7 @@ const TicketInfoPage = () => {
 
 				<div className='ticketinfopage--icons-text'>
 					<AccessTimeFilledOutlinedIcon className='ticketinfopage--icons'/>
-					<span>Nahlášeno dne</span>
+					<span style={{color: "#2074d4"}} >Nahlášeno dne</span>
 				</div>
 				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
 				<br/>
@@ -192,7 +193,7 @@ const TicketInfoPage = () => {
 
 				<div className='ticketinfopage--icons-text'>
 					<ImageIcon className='ticketinfopage--icons'/>
-					<span>Fotografie</span>
+					<span style={{color: "#2074d4"}} >Fotografie</span>
 				</div>
 				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
 				<br/>
@@ -201,7 +202,7 @@ const TicketInfoPage = () => {
 
 				<div className='ticketinfopage--icons-text'>
 					<MessageIcon className='ticketinfopage--icons'/>
-					<span>Komentáře</span>
+					<span style={{color: "#2074d4"}} >Komentáře</span>
 				{user.role == 3 || user.role == 4 &&
 				<AddIcon className='ticketinfopage--icons-2' onClick={() => navigate(`/createticketcomment?ticket_id=${id}`)}/>
 				}

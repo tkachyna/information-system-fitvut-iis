@@ -8,15 +8,18 @@ import { Select, MenuItem, Divider, TextField }from '@mui/material';
 import MessageIcon from '@mui/icons-material/Message';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import AddIcon from '@mui/icons-material/Add';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import CommentIcon from '@mui/icons-material/Comment';
 import TopicIcon from '@mui/icons-material/Topic';
 import GroupIcon from '@mui/icons-material/Group';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Spinner from '../components/Spinner';
 
 const ServiceRequestPage = () => {
     const navigate = useNavigate();
-    const navigate2 = useNavigate();
     const useQuery = () => new URLSearchParams(useLocation().search);
     const query = useQuery();
+    let [isLoaded, setIsLoaded] = useState(false)
     const id = query.get('id');
 
     let [formData, setFormData] = useState({
@@ -27,10 +30,12 @@ const ServiceRequestPage = () => {
     let [request, setRequest] = useState([])
     let [requestState, setRequestState] = useState("")
     let [requestComment, setRequestComments] = useState([])
+    let [technicians, setTechnicians] = useState([])
+    let [name, setName] = useState("")
 
     useEffect( () => {
         getRequest()
-        
+        getListOfUsers()
     }, [])
 
     function handleChange3(event) {
@@ -76,10 +81,10 @@ const ServiceRequestPage = () => {
         
         let data = await response.json()
 
-        if(response.status == 200) {
+        if (response.status == 200) {
             setRequest(data)
             setRequestState(data.state)
-
+            getTechsUsername(data.t_id)
             getrequestComments()
             setFormData(prevFormData => {
 				return {
@@ -104,6 +109,30 @@ const ServiceRequestPage = () => {
           })
       })
     }
+
+    let getTechsUsername = async(t_id) => {
+        let response = await fetch(`api/getUsers/`, {
+            method: 'GET',
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization':'Bearer ' + String(authTokens.access)
+            }
+        })
+
+        let data = await response.json()
+
+        if (response.status == 200) {
+            console.log(data)
+            for (let i = 0; i < data.length; i++) {
+                if (t_id.indexOf(data[i].id) >= 0) {
+                    setTechnicians(oldData => [...oldData, data[i]])
+                }
+            }
+        }
+        
+        
+        setIsLoaded(true)
+      }
 
 
     let updateRequestState = async(value) => {
@@ -161,11 +190,37 @@ const ServiceRequestPage = () => {
 	})
 	}
 
+    let getListOfUsers = async() => {
+        let response = await fetch("api/getUsers", {
+            method: 'GET',
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization':'Bearer ' + String(authTokens.access)
+            }
+        })
+
+      let data = await response.json()
+
+      if (response.status == 200) {
+            for (let i = 0; i < data.length; i++) {
+
+                if(data[i].id == props.item.author_id)   {
+                    setName(data[i].username)
+                }
+                
+            } 
+            console.log(data)
+        }
+        
+        
+    } 
+
 	const comments = requestComment.map(item => {
 		return (
 			<Comment
 				key={item.id}
 				item={item}
+                name={name}
 			/>
 		)
 	})
@@ -183,41 +238,56 @@ const ServiceRequestPage = () => {
 		}
 	}
 
+    const techs = technicians.map(item => {
+        return (
+            <table key={item.id}>
+                <tbody>
+                    <tr>
+                        <td><AccountCircleIcon/></td>
+                        <td>(ID {item.id})</td>
+                        <td><b>{item.username}</b></td>
+                        <td><LocalPhoneIcon/></td>
+                        <td>+420 {item.phone_number}</td>
+                    </tr>
+                </tbody>
+            </table> 
+        )
+    })
+
+
 	function formatDate(string){
 		var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
 		return new Date(string).toLocaleDateString([],options);
 	}
+
    
     return (
+    <div>
+    {isLoaded 
+    &&
+
       <div>
         <h2 style={{marginLeft: 16, marginTop: 16}} >Servisní požadavek</h2>
         <div className='ticketinfopage--wrapper'>
-            <div className='ticketinfopage--icons-text'>
-                <TopicIcon className='ticketinfopage--icons'/>
-                <span>Tiket</span>
-            </div>
-            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
-            <br/>
-            <span className='light-text'> {request.ticket_id}</span>
-            <br/>
 
-            <div className='ticketinfopage--icons-text'>
-            <GroupIcon className='ticketinfopage--icons'/>
-            <span>Servisní pracovníci</span>
-            </div>
-            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
-            <br/>
-            <span className='light-text'> {request.t_id}</span>
-            <br/>
+            <div className='ticketinfopage--icons-text'> <TopicIcon className='ticketinfopage--icons'/><span style={{color: "#2074d4"}} >Tiket</span></div>
+            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/><br/>
+            <span onClick={() => navigate(`/ticket?id=${request.ticket_id}`)} className='light-text'><u>{request.ticket_id}</u></span><br/>
+    
+            <div className='ticketinfopage--icons-text'><GroupIcon className='ticketinfopage--icons'/><span style={{color: "#2074d4"}} >Servisní pracovníci</span></div>
+            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/><br/>
+            <span className='light-text'> {techs}</span>
+            
 
 
             <div className='ticketinfopage--icons-text'>
             <AccessAlarmIcon className='ticketinfopage--icons'/>
-            <span>Stav</span>
+            <span style={{color: "#2074d4"}}>Stav</span>
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
             <Select
+              size="small"
               labelId="state"
               id="state"
               value={requestState}
@@ -232,7 +302,7 @@ const ServiceRequestPage = () => {
             <br/>
             <div className='ticketinfopage--icons-text'>
             <CommentIcon className='ticketinfopage--icons'/>
-            <span className='light-text' >Popis</span>
+            <span style={{color: "#2074d4"}} >Popis</span>
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
@@ -240,7 +310,7 @@ const ServiceRequestPage = () => {
             <br/>
             <div className='ticketinfopage--icons-text'>
             <AccessTimeFilledOutlinedIcon className='ticketinfopage--icons'/>
-            <span>Nahlášeno dne</span>
+            <span style={{color: "#2074d4"}} >Nahlášeno dne</span>
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
@@ -248,29 +318,29 @@ const ServiceRequestPage = () => {
             <br/>
             <div className='ticketinfopage--icons-text'>
             <AccessTimeFilledOutlinedIcon className='ticketinfopage--icons'/>
-            <span>{"Očekávaný čas opravy  (v hodinách)"}</span>
+            <span style={{color: "#2074d4"}} >{"Očekávaný čas opravy  (v hodinách, enter pro uložení)"}</span>
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
-            <TextField required
+            <TextField required size="small"
             id="servicerequest-est" variant="outlined" onChange={handleChange3}  value={formData.esttime} onKeyDown={keyPress2} sx={{width: 100}}
             type="text" name="esttime"/> 
             <br/>
 
             <div className='ticketinfopage--icons-text'>
             <AccessTimeFilledOutlinedIcon className='ticketinfopage--icons'/>
-            <span>{"Reálný čas opravy (v hodinách)"}</span>
+            <span style={{color: "#2074d4"}} >{"Reálný čas opravy (v hodinách, enter pro uložení)"}</span>
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
     
-            <TextField required
+            <TextField required size="small"
             id="servicerequest-real" variant="outlined" onChange={handleChange3} value={formData.realtime} onKeyDown={keyPress1} sx={{width: 100}}
             type="text" name="realtime"/> 
             <div className='ticketinfopage--icons-text'>
             <MessageIcon className='ticketinfopage--icons'/>
-            <span>Komentáře</span>
-            <AddIcon className='ticketinfopage--icons-2' onClick={() => navigate2(`/createreqcomment?request_id=${id}`)}/>
+            <span style={{color: "#2074d4"}} >Komentáře</span>
+            <AddIcon className='ticketinfopage--icons-2' onClick={() => navigate(`/createreqcomment?request_id=${id}`)}/>
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
@@ -279,6 +349,12 @@ const ServiceRequestPage = () => {
 
         </div>
         
+      </div>
+      }
+      {!isLoaded 
+      &&
+      <Spinner/>
+      }
       </div>
     )
   }
