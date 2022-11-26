@@ -31,11 +31,9 @@ export const AuthProvider = ({children}) => {
             setUser(jwtDecode(data.access))
             localStorage.setItem('authTokens', JSON.stringify(data))
             history('/');
-            <Alert severity='success'>Úspěšně přihlášen</Alert>
 
-   
-        }else{
-            return "spatne zadane heslo"
+        } else {
+            return 1
         }
     }
 

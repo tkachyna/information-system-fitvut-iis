@@ -5,13 +5,13 @@ import Spinner from '../components/Spinner';
 import AuthContext from '../context/AuthContext'
 
 const ListOfServiceRequestsPage = () => {
-
-    let {authTokens, logoutUser, user} = useContext(AuthContext)  
+    let {authTokens, user} = useContext(AuthContext)  
     let [listOfTickets, setListOfTickets] = useState([])
     let [isLoaded, setIsLoaded] = useState(false)
 
     useEffect( () => {
         getServiceRequests()
+
     }, [])
     
     let getServiceRequests = async() => {
@@ -31,7 +31,6 @@ const ListOfServiceRequestsPage = () => {
         }
     }
 
-
     const items = listOfTickets.map(item => {
         return (
             <ServiceRequest
@@ -40,7 +39,6 @@ const ListOfServiceRequestsPage = () => {
             />
         )
     })
-
 
     return (
         <div>
@@ -64,15 +62,14 @@ const ListOfServiceRequestsPage = () => {
                 <td style={{width: 120}}>Stav</td>
                 <td style={{width: 120}}>Komentáře</td>
                 <td style={{width: 100}}></td>
-                {user.role == 3 
+                {user.role == 3 || user.role == 4
                 &&
                 <td style={{width: 100}}>  </td>}
             </tr>
             </tbody>
         </table>
-            <div>
                 {items}
-            </div>
+
         </div>
         } 
         {!isLoaded 

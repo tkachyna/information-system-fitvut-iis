@@ -13,7 +13,6 @@ import TopicIcon from '@mui/icons-material/Topic';
 import GroupIcon from '@mui/icons-material/Group';
 
 const ServiceRequestPage = () => {
-
     const navigate = useNavigate();
     const navigate2 = useNavigate();
     const useQuery = () => new URLSearchParams(useLocation().search);
@@ -21,10 +20,9 @@ const ServiceRequestPage = () => {
     const id = query.get('id');
 
     let [formData, setFormData] = useState({
-      esttime: null,
-      realtime: null,
-  })
-
+		esttime: 0,
+		realtime: 0,
+  	})
     let {authTokens, user} = useContext(AuthContext)  
     let [request, setRequest] = useState([])
     let [requestState, setRequestState] = useState("")
@@ -36,41 +34,22 @@ const ServiceRequestPage = () => {
     }, [])
 
     function handleChange3(event) {
-      const {name, value,} = event.target
-      setFormData(prevFormData => {
-          return {
-              ...prevFormData,
-              [name]: value
-          }
-      })
-  }
+		const {name, value,} = event.target
+		setFormData(prevFormData => {
+			return {
+				...prevFormData,
+				[name]: value
+			}
+		})
+	}
 
-    let getColor = () => {
-      switch(request.state) {
-          case "Podáno":
-            return {color: "#e60000"} 
-          case "V řešení":
-            return {color: "#ff9900"} 
-          case "Dokončeno":
-            return {color: "#02630c"} 
-          default:
-            return {color: "#e60000"} 
-      }
-    } 
-
-    function handleChange2(event) {
-        const {value} = event.target
-        updateRequestEstTime(value)
-      }
-      
     function handleChange(event) {
-      const {value} = event.target
-      updateRequestState(value)
+		const {value} = event.target
+		updateRequestState(value)
     }
 
 
-    let getrequestComments = async() => {
-      
+    let getrequestComments = async() => {  
         let response = await fetch(`api/getRequestComments?id=${id}`, {
           method: 'GET',
           headers:{
@@ -103,27 +82,12 @@ const ServiceRequestPage = () => {
 
             getrequestComments()
             setFormData(prevFormData => {
-              return {
-                esttime: data.estimated_time,
-                realtime: data.real_time
-              }
+				return {
+					esttime: data.estimated_time,
+					realtime: data.real_time
+				}
             })
         }
-    }
-
-    let updateRequestEstTime = async(value) => {
-        let response = await fetch(`api/editRequest`, {
-            method: 'POST',
-            headers:{
-                'Content-Type':'application/json',
-                'Authorization':'Bearer ' + String(authTokens.access)
-            },
-            body: JSON.stringify({
-              author_id: user.user_id,
-              id: request.id,
-              estimated_time: value
-            })
-        })
     }
 
     let updateTicketState = async() => {
@@ -163,69 +127,67 @@ const ServiceRequestPage = () => {
             updateTicketState()
           }
           setRequestState(data.state)
-         // getrequestComments()
       }
   }
 
-  let updateEstTime = async(value) => {
-    let response = await fetch(`api/editRequest`, {
-        method: 'POST',
-        headers:{
-            'Content-Type':'application/json',
-            'Authorization':'Bearer ' + String(authTokens.access)
-        },
-        body: JSON.stringify({
-          author_id: user.user_id,
-          id: request.id,
-          estimated_time: formData.esttime
-        })
-    })
-    
-}
+	let updateEstTime = async(value) => {
+		let response = await fetch(`api/editRequest`, {
+			method: 'POST',
+			headers:{
+				'Content-Type':'application/json',
+				'Authorization':'Bearer ' + String(authTokens.access)
+			},
+			body: JSON.stringify({
+				author_id: user.user_id,
+				id: request.id,
+				estimated_time: formData.esttime
+			})
+		})
+		
+	}
 
-let updateRealTime = async(value) => {
-  let response = await fetch(`api/editRequest`, {
-      method: 'POST',
-      headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer ' + String(authTokens.access)
-      },
-      body: JSON.stringify({
-        author_id: user.user_id,
-        id: request.id,
-        real_time: formData.realtime
-      })
-  })
-}
+	let updateRealTime = async(value) => {
+		let response = await fetch(`api/editRequest`, {
+			method: 'POST',
+			headers:{
+				'Content-Type':'application/json',
+				'Authorization':'Bearer ' + String(authTokens.access)
+			},
+			body: JSON.stringify({
+				author_id: user.user_id,
+				id: request.id,
+				real_time: formData.realtime
+			})
+	})
+	}
 
-  const comments = requestComment.map(item => {
-    return (
-        <Comment
-            key={item.id}
-            item={item}
-        />
-    )
-})
+	const comments = requestComment.map(item => {
+		return (
+			<Comment
+				key={item.id}
+				item={item}
+			/>
+		)
+	})
 
-let keyPress2 = (e) => {
-  if(e.key == 'Enter'){
-    updateEstTime()
-    // put the login here
- }
-}
+	let keyPress2 = (e) => {
+		if(e.key == 'Enter'){
+			updateEstTime()
 
-let keyPress1 = (e) => {
-  if(e.key == 'Enter'){
-    updateRealTime()
- }
-}
+		}
+	}
 
-  function formatDate(string){
-    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
-    return new Date(string).toLocaleDateString([],options);
-  }
+	let keyPress1 = (e) => {
+		if(e.key == 'Enter'){
+			updateRealTime()
+		}
+	}
+
+	function formatDate(string){
+		var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
+		return new Date(string).toLocaleDateString([],options);
+	}
    
-
     return (
       <div>
         <h2 style={{marginLeft: 16, marginTop: 16}} >Servisní požadavek</h2>
@@ -291,8 +253,8 @@ let keyPress1 = (e) => {
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
             <TextField required
-            id="servicerequest-est" variant="outlined" onChange={handleChange3}  value={formData.esttime} onKeyDown={keyPress2}
-            type="text" name="esttime"/>
+            id="servicerequest-est" variant="outlined" onChange={handleChange3}  value={formData.esttime} onKeyDown={keyPress2} sx={{width: 100}}
+            type="text" name="esttime"/> 
             <br/>
 
             <div className='ticketinfopage--icons-text'>
@@ -303,9 +265,8 @@ let keyPress1 = (e) => {
             <br/>
     
             <TextField required
-            id="servicerequest-real" variant="outlined" onChange={handleChange3} value={formData.realtime} onKeyDown={keyPress1}
-            type="text" name="realtime"/>
-            <br/>
+            id="servicerequest-real" variant="outlined" onChange={handleChange3} value={formData.realtime} onKeyDown={keyPress1} sx={{width: 100}}
+            type="text" name="realtime"/> 
             <div className='ticketinfopage--icons-text'>
             <MessageIcon className='ticketinfopage--icons'/>
             <span>Komentáře</span>

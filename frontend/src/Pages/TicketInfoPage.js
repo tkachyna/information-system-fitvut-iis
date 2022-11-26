@@ -12,74 +12,73 @@ import Spinner from '../components/Spinner';
 import AuthContext from '../context/AuthContext';
 
 const TicketInfoPage = () => {
+    let navigate = useNavigate();
+    let useQuery = () => new URLSearchParams(useLocation().search);
+    let query = useQuery();
+    let id = query.get('id');
 
-    const navigate = useNavigate();
-    const navigate2 = useNavigate();
-    const useQuery = () => new URLSearchParams(useLocation().search);
-    const query = useQuery();
-    const id = query.get('id');
-
-    let {authTokens, logoutUser, user} = useContext(AuthContext)  
     let [ticket, setTicket] = useState([])
     let [ticketState, setTicketState] = useState("")
     let [ticketComment, setTicketComments] = useState([])
     let [isLoaded, setIsLoaded] = useState(false)
+	let {authTokens, user} = useContext(AuthContext)  
 
     useEffect( () => {
        getTicket();
+
     }, [])
 
     let getColor = () => {
-      switch(ticket.state) {
-          case "1":
-            return {color: "#e60000"} 
-          case "2":
-            return {color: "#ff9900"} 
-          case "3":
-            return {color: "#02630c"} 
-          case "4":
-            return {color: "#630202"} 
-          default:
-            return {color: "#e60000"} 
-      }
+		switch(ticket.state) {
+			case "1":
+				return {color: "#e60000"} 
+			case "2":
+				return {color: "#ff9900"} 
+			case "3":
+				return {color: "#02630c"} 
+			case "4":
+				return {color: "#630202"} 
+			default:
+				return {color: "#e60000"} 
+		}
     } 
 
     let getState = () => {
-      switch(ticket.state) {
-        case "1":
-          return "Podáno" 
-        case "2":
-          return "V řešení" 
-        case "3":
-          return "Dokončeno"
-        case "4":
-          return "Zamítnuto"
-        default:
-          return "Error"
-    }
-  } 
+		switch(ticket.state) {
+			case "1":
+			return "Podáno" 
+			case "2":
+			return "V řešení" 
+			case "3":
+			return "Dokončeno"
+			case "4":
+			return "Zamítnuto"
+			default:
+			return "Error"
+		}
+	} 
 
     function handleChange(event) {
-      const {value} = event.target
-      updateTicketState(value)
+		const {value} = event.target
+		updateTicketState(value)
     }
 
 
     let getTicketComments = async() => {      
         let response = await fetch(`api/getTicketComments?id=${id}`, {
-          method: 'GET',
-          headers:{
-              'Content-Type':'application/json',
-              'Authorization':'Bearer ' + String(authTokens.access)
-          }
+			method: 'GET',
+			headers:{
+				'Content-Type':'application/json',
+				'Authorization':'Bearer ' + String(authTokens.access)
+			}
       })
 
       let data = await response.json()
 
-      if (response.status == 200) {
-          setTicketComments(data)
-          setIsLoaded(true)
-      }
+		if (response.status == 200) {
+			setTicketComments(data)
+			setIsLoaded(true)
+		}
     }
     
     let getTicket = async() => {
@@ -102,126 +101,124 @@ const TicketInfoPage = () => {
     }
 
     let updateTicketState = async(value) => {
-      let response = await fetch(`api/editTicket`, {
-          method: 'POST',
-          headers:{
-              'Content-Type':'application/json',
-              'Authorization':'Bearer ' + String(authTokens.access)
-          },
-          body: JSON.stringify({
-            author_id: user.user_id,
-            id: ticket.id,
-            state: value
-          })
+		let response = await fetch(`api/editTicket`, {
+			method: 'POST',
+			headers:{
+				'Content-Type':'application/json',
+				'Authorization':'Bearer ' + String(authTokens.access)
+			},
+			body: JSON.stringify({
+				author_id: user.user_id,
+				id: ticket.id,
+				state: value
+			})
       })
       
-      let data = await response.json()
+		let data = await response.json()
 
-      if(response.status == 200) {
-          setTicket(data)
-          setTicketState(data.state)
-          getTicketComments()
-      }
-  }
-
+		if(response.status == 200) {
+			setTicket(data)
+			setTicketState(data.state)
+			getTicketComments()
+		}
+  	}
 
     const comments = ticketComment.map(item => {
-      return (
-          <Comment
-              key={item.id}
-              item={item}
-          />
-      )
-  })
+		return (
+			<Comment
+				key={item.id}
+				item={item}
+			/>
+		)
+  	})
 
-  function formatDate(string){
-    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
-    return new Date(string).toLocaleDateString([],options);
-  }
+	function formatDate(string){
+		var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
+		return new Date(string).toLocaleDateString([],options);
+	}
   
     return (
-      <div>
-      {isLoaded 
-      &&
-      <div>
-        <h2 style={{marginLeft: 16}}>Nahlášená závada</h2>
-        <h3 style={{marginLeft: 16}}>Název: {ticket.name} </h3>   
-        <div className='ticketinfopage--wrapper'>
-            
+		<div>
+		{isLoaded &&
+		<div>
+				<h2 style={{marginLeft: 16}}>Nahlášená závada</h2>
+				<h3 style={{marginLeft: 16}}>Název: {ticket.name} </h3> 
 
-            <div className='ticketinfopage--icons-text'>
-            <AccessAlarmIcon className='ticketinfopage--icons'/>
-            <span>Stav</span>
-            </div>
-            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
-            <br/>
-            {(user.role == 2 || user.role == 1)
-            &&
-            <span style={getColor()}>{getState()}</span>
-            }
-            {user.role == 3
-            &&
-            <Select
-              labelId="state"
-              id="state"
-              value={ticketState}
-              label="state"
-              onChange={handleChange}
-            >
-              <MenuItem value={'1'}>Podáno</MenuItem>
-              <MenuItem value={'2'}>V řešení</MenuItem>
-              <MenuItem value={'3'}>Dokončeno</MenuItem>
-              <MenuItem value={'4'}>Zamítnuto</MenuItem>
-            </Select>
-            }
-            <br/>
-            <div className='ticketinfopage--icons-text'>
-            <CommentIcon className='ticketinfopage--icons'/>
-            <span className='light-text' >Popis</span>
-            </div>
-            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
-            <br/>
-            <span className='light-text'> {ticket.description}</span>
-            <br/>
-            <div className='ticketinfopage--icons-text'>
-            <AccessTimeFilledOutlinedIcon className='ticketinfopage--icons'/>
-            <span>Nahlášeno dne</span>
-            </div>
-            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
-            <br/>
-            {formatDate(String(ticket.creation_date_time))}
-            <br/>
+				<div className='ticketinfopage--wrapper'>
 
-            <div className='ticketinfopage--icons-text'>
-            <ImageIcon className='ticketinfopage--icons'/>
-            <span>Fotografie</span>
-            </div>
-            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
-            <br/>
-            <img style={{width: 500}} src={ticket.url}/>
-            <br/>
+				<div className='ticketinfopage--icons-text'>
+					<AccessAlarmIcon className='ticketinfopage--icons'/>
+					<span>Stav</span>
+				</div>
+				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
+				<br/>
 
-            <div className='ticketinfopage--icons-text'>
-            <MessageIcon className='ticketinfopage--icons'/>
-            <span>Komentáře</span>
-            {user.role === 3
-            &&
-            <AddIcon className='ticketinfopage--icons-2' onClick={() => navigate2(`/createcomment?ticket_id=${id}`)}/>
-            }
-            </div>
-            <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
-            <br/>
-            {comments}   
-            <br/>
+				{(user.role == 2 || user.role == 1) &&
+				<span style={getColor()}>{getState()}</span>
+				}
 
-        </div>
-      </div>
-      } 
-      {!isLoaded 
-      && 
-      <Spinner/>
-      }
-      </div>
+				{(user.role == 3 || user.role == 4) &&
+				<Select
+					labelId="state"
+					id="state"
+					value={ticketState}
+					label="state"
+					onChange={handleChange}>
+					<MenuItem value={'1'}>Podáno</MenuItem>
+					<MenuItem value={'2'}>V řešení</MenuItem>
+					<MenuItem value={'3'}>Dokončeno</MenuItem>
+					<MenuItem value={'4'}>Zamítnuto</MenuItem>
+				</Select>
+				}
+				<br/>
+
+				<div className='ticketinfopage--icons-text'>
+					<CommentIcon className='ticketinfopage--icons'/>
+					<span className='light-text' >Popis</span>
+				</div>
+				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
+				<br/>
+				<span className='light-text'> {ticket.description}</span>
+				<br/>
+
+				<div className='ticketinfopage--icons-text'>
+					<AccessTimeFilledOutlinedIcon className='ticketinfopage--icons'/>
+					<span>Nahlášeno dne</span>
+				</div>
+				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
+				<br/>
+				{formatDate(String(ticket.creation_date_time))}
+				<br/>
+
+				<div className='ticketinfopage--icons-text'>
+					<ImageIcon className='ticketinfopage--icons'/>
+					<span>Fotografie</span>
+				</div>
+				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
+				<br/>
+				<img style={{width: 500}} src={ticket.url}/>
+				<br/>
+
+				<div className='ticketinfopage--icons-text'>
+					<MessageIcon className='ticketinfopage--icons'/>
+					<span>Komentáře</span>
+				{user.role == 3 || user.role == 4 &&
+				<AddIcon className='ticketinfopage--icons-2' onClick={() => navigate(`/createticketcomment?ticket_id=${id}`)}/>
+				}
+				</div>
+				<Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
+				<br/>
+				{comments}   
+				<br/>
+
+			</div>
+		</div>
+		} 
+		{!isLoaded && 
+		<Spinner/>
+		}
+		</div>
     )
   }
+  
 export default TicketInfoPage

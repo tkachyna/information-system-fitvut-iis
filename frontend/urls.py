@@ -7,14 +7,15 @@ urlpatterns = [
     path('addticket', index),
     path('tickets', index),
     path('signup', index),
-    path('servicerequests', index),
     path('editaccount', index),
     path('addtechnician', index),
     path('ticket', index),
     path('usermanagement', index),
-    path('createcomment', index),
+    path('createticketcomment', index),
     path('addrequest', index),
-    path('servicerequests2', index),
+    path('servicerequests', index),
     path('servicerequest', index),
     path('createreqcomment', index),
+    path('about', index),
 ]
+

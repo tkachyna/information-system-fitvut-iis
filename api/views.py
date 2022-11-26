@@ -122,14 +122,14 @@ def createTicket(request):
     if u.count() == 0:
         db.dispose()
         return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 1:
+    if u[0].role not in (1,3,4):
         db.dispose()
         return Response(data={'User is not citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
 
     # print(data['text'])
     try:
         # kontrola, ze je customer citizen a admin spravce??
-        new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=1,
+        new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=67,
                       creation_date_time=timezone.now())
         # print(new_ticket.description)
         session.add(new_ticket)
@@ -265,7 +265,7 @@ def createRequest(request):
     if u.count() == 0:
         db.dispose()
         return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 3:  #manager
+    if u[0].role not in (3,4):  #manager
         db.dispose()
         return Response(data={'User is not manager!!'}, status=status.HTTP_400_BAD_REQUEST)
     # valid ticket check
@@ -310,7 +310,7 @@ def postRequestComment(request):
         #session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role not in [2,3]:  #change to manager (3)
+    if u[0].role not in [2,3,4]:  #change to manager (3)
         #session.close()
         db.dispose()
         return Response(data={'Incorrect user 2'}, status=status.HTTP_400_BAD_REQUEST)
@@ -347,7 +347,7 @@ def editRequest(request):
         # session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 3:  # change to manager (3)
+    if u[0].role not in [2,3,4]:  # change to manager (3)
         # session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
@@ -378,6 +378,7 @@ def editRequest(request):
         return Response(data=r_serialized, status=status.HTTP_200_OK)
     except:
         db.dispose()
+        print("this")
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
@@ -427,7 +428,7 @@ def editTicket(request):
         # session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
-    if u[0].role != 3:  # change to manager (3)
+    if u[0].role not in (3,4):  # change to manager (3)
         # session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
@@ -465,10 +466,10 @@ def editUserRole(request):
 
 @api_view(['POST'])
 def editUser(request):
+    from .models import User
     data = json.loads(request.body)
-    print(data)
-    owner = request.user
-    owner.username = data['user']
+    owner = User.objects.get(username=data['username'])
+    owner.username = data['username']
     owner.first_name = data['first_name']
     owner.last_name = data['last_name']
     owner.email = data['email']

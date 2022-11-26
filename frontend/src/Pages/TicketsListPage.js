@@ -62,9 +62,7 @@ const TicketsListPage = () => {
           </tr>
         </tbody>
       </table>
-        <div>
             {items}
-        </div>
     </div>
   )
 

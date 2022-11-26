@@ -64,7 +64,7 @@ const HomePage = () => {
     {user.role == 2
     &&
     <div>
-    <Button  href='/servicerequests2' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
+    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
     <br/>
     <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
     </div>
@@ -78,13 +78,14 @@ const HomePage = () => {
     <br/>
     <Button  href='/addrequest' type="submit" variant="outlined" sx = {style} >Vytvoření servisního požadavku  </Button> 
     <br/>
-    <Button  href='/addticket' type="submit" variant="outlined" sx = {style} >Nahlásit závadu</Button> 
+    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
     <br/>
     <Divider sx={{m: 2, width: 500}}/>
     <br/>
-    <Button  href='/servicerequests2' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
+    <Button  href='/addticket' type="submit" variant="outlined" sx = {style} >Nahlásit závadu</Button> 
+
     <br/>
-    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat nahlášené závady</Button>
+    <Button  href='/tickets' type="submit" variant="outlined" sx = {style} >Spravovat nahlášené závady</Button>
     <br/>
     <Divider sx={{m: 2, width: 500}}/>
     <br/>
@@ -98,9 +99,9 @@ const HomePage = () => {
     <br/>
     <Button  href='/addrequest' type="submit" variant="outlined" sx = {style} >Vytvoření servisního požadavku  </Button> 
     <br/>
-    <Button  href='/servicerequests2' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
+    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
     <br/>
-    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat nahlášené závady</Button>
+    <Button  href='/tickets' type="submit" variant="outlined" sx = {style} >Spravovat nahlášené závady</Button>
     <br/>
     <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
     </div>

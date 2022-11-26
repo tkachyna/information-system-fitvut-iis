@@ -388,6 +388,9 @@ const EditAccountPage = () =>  {
             sx = {style}
             >Potvrdit</Button>
       <br></br>
+      {user.user_id != 67
+      &&
+      <div>
       <h3 style={{marginLeft: 16}}>Smazání účtu</h3>
           <Button 
             onClick={deleteAccount}
@@ -400,6 +403,8 @@ const EditAccountPage = () =>  {
             borderColor: "red"}}
             >Smazat účet</Button>
           <br/>
+        </div>
+        }
       <Dialog
         open={open}
         onClose={handleCloseNo}

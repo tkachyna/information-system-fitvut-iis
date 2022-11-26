@@ -30,7 +30,7 @@ const Header = () => {
         {!user && <LoginIcon onClick={() => navigate('/login')}/>}
         {user && <div className='header--loggedas'>Jsi aktuálně přihlášen jako "{user.username}", tvoje role je {userRole[user.role]}</div>}
         
-        <InfoIcon className='header--button-about'/>
+        <InfoIcon onClick={() => navigate('/about')} className='header--button-about'/>
  
 
       </div>
