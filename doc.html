@@ -12,70 +12,79 @@
 </head>
 <body>
 
-<!-- Zkontrolujte prosím nastavení kódování v hlavièce dokumentu 
-     podle pou¾itého editoru -->
+<!-- Zkontrolujte prosÃ­m nastavenÃ­ kÃ³dovÃ¡nÃ­ v hlaviÄce dokumentu 
+     podle pouÅ¾itÃ©ho editoru -->
 
-<h1>Chytré mìsto </h1>
+<h1>ChytrÃ© mÄ›sto </h1>
 
 <dl>
-	<dt>Autoøi</dt>
-	<dd>Tadeá¹ Kachyna <!-- Nahraïte skuteènım jménem a e-mailem autora a popisem èinnosti -->
+	<dt>AutoÅ™i</dt>
+	<dd>TadeÃ¡Å¡ Kachyna <!-- NahraÄte skuteÄnÃ½m jmÃ©nem a e-mailem autora a popisem Äinnosti -->
 	    <a href="mailto:xkachy00@stud.fit.vutbr.cz">xkachy00@stud.fit.vutbr.cz</a> -
-		popis èinnosti v tımu
+		 zaloÅ¾enÃ­ projektu a implementace zÃ¡kladnÃ­ho backendu, implementace autentizace a autorizace, frontend,  zprovoznÄ›nÃ­ vzdÃ¡lenÃ©ho server
 	</dd>
-	<dd>Lada Krofingerová <!-- Nahraïte skuteènım jménem a e-mailem autora a popisem èinnosti -->
+	<dd>Lada KrofingerovÃ¡ <!-- NahraÄte skuteÄnÃ½m jmÃ©nem a e-mailem autora a popisem Äinnosti -->
 	    <a href="mailto:xkrofi00@stud.fit.vutbr.cz">xkrofi00@stud.fit.vutbr.cz</a> - 
-		popis èinnosti v tımu
+		backend (API, databÃ¡ze, modely)
 	</dd>
-  <dd>Lucia Makaiová <!-- Nahraïte skuteènım jménem a e-mailem autora a popisem èinnosti -->
+  <dd>Lucia MakaiovÃ¡ <!-- NahraÄte skuteÄnÃ½m jmÃ©nem a e-mailem autora a popisem Äinnosti -->
 	    <a href="mailto:xmakai00@stud.fit.vutbr.cz">xmakai00@stud.fit.vutbr.cz</a> - 
-		popis èinnosti v tımu
+		backend (API, databÃ¡ze, sprÃ¡va rolÃ­), zprovoznÄ›nÃ­ databÃ¡ze na vzdÃ¡lenÃ©m serveru
 	</dd>
 	<dt>URL aplikace</dt>
 	<dd><a href="https://smart-city-test.herokuapp.com/">https://smart-city-test.herokuapp.com/</a></dd>
 </dl>
 
-<h2>U¾ivatelé systému pro testování</h2>
-<p>Uveïte prosím existující zástupce <strong>v¹ech rolí u¾ivatelù</strong>.</p>
+<h2>UÅ¾ivatelÃ© systÃ©mu pro testovÃ¡nÃ­</h2>
+<p>UveÄte prosÃ­m existujÃ­cÃ­ zÃ¡stupce <strong>vÅ¡ech rolÃ­ uÅ¾ivatelÅ¯</strong>.</p>
 <table>
 <tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
-<tr><td>admin</td><td>admin</td><td>Administrátor</td></tr>
-<tr><td>spravce</td><td>spravce</td><td>Správce</td></tr>
+<tr><td>admin</td><td>admin</td><td>AdministrÃ¡tor</td></tr>
+<tr><td>spravce</td><td>spravce</td><td>SprÃ¡vce</td></tr>
 <tr><td>technik</td><td>technik</td><td>Technik</td></tr>
 <tr><td>obyvatel</td><td>obyvatel</td><td>Obyvatel</td></tr>
 </table>
 
-<p>IS implementuje role a pøípady u¾ití definované zadáním.</p> 
+<p>IS implementuje role a pÅ™Ã­pady uÅ¾itÃ­ definovanÃ© zadÃ¡nÃ­m.</p> 
 
 <h3>Video</h3>
 
-<p>Pøilo¾te odkaz na komentované video demostrující pou¾ití informaèního systému. Zamìøte se na pøípady u¾ití definované zadáním (napø. registrace u¾ivatele, správa u¾ivatelù a èinnosti jednotlivıch rolí). Video nahrajte napøíklad na VUT Google Drive, kde ho bude mo¾né pøímo spustit z odkazu.</p> 
+<p>PÅ™iloÅ¾te odkaz na komentovanÃ© video demostrujÃ­cÃ­ pouÅ¾itÃ­ informaÄnÃ­ho systÃ©mu. ZamÄ›Å™te se na pÅ™Ã­pady uÅ¾itÃ­ definovanÃ© zadÃ¡nÃ­m (napÅ™. registrace uÅ¾ivatele, sprÃ¡va uÅ¾ivatelÅ¯ a Äinnosti jednotlivÃ½ch rolÃ­). Video nahrajte napÅ™Ã­klad na VUT Google Drive, kde ho bude moÅ¾nÃ© pÅ™Ã­mo spustit z odkazu.</p> 
 
 <h2>Implementace</h2>
-<p>Aplikace se skláda z 3 základních èástí -databáze, back-end, front-end. Databáze je implementována pomocí SØBD PostgreSQL a je pøepojená s back-endem pomocí knihovny SQLAlchemy. Na implementaci back-endu pou¾íváme framework Django a pro front-end jsme zvolili webovı framework React. </p>
-<p>V èásti api/ se v souboru models.py nachází definované modely. Soubor views.py obsahuje API endpointy pro komunikaci s frontendem pomocí GET a POST requestù, na zabezpeèení klasickıch CRUD operací s databázovımi objekty.</p>
+<p>Aplikace se sklÃ¡da z 3 zÃ¡kladnÃ­ch ÄÃ¡stÃ­ -databÃ¡ze, back-end, front-end. DatabÃ¡ze je implementovÃ¡na pomocÃ­ SÅ˜BD PostgreSQL a je pÅ™epojenÃ¡ s back-endem pomocÃ­ knihovny SQLAlchemy. Na implementaci back-endu pouÅ¾Ã­vÃ¡me framework Django a pro front-end jsme zvolili webovÃ½ framework React. </p>
+<p>V ÄÃ¡sti api/ se v souboru models.py nachÃ¡zÃ­ definovanÃ© modely. Soubor views.py obsahuje API endpointy pro komunikaci s frontendem pomocÃ­ GET a POST requestÅ¯, na zabezpeÄenÃ­ klasickÃ½ch CRUD operacÃ­ s databÃ¡zovÃ½mi objekty.</p>
 
-<h3>Databáze</h3>
+<h3>DatabÃ¡ze</h3>
+	
+<h3>Autentizace</h3>
+<p>Je Å™eÅ¡ena za pomocÃ­ Json Web TokenÅ¯ (JWT),  tokeny jsou dva, pÅ™Ã­stupovÃ½ a obnovovacÃ­, kterÃ© majÃ­ svou dobu expirace (5 minut a 90 dnÃ­). Tokeny jsou uklÃ¡dÃ¡ny do mÃ­stnÃ­ho ÃºloÅ¾iÅ¡tÄ› ve webovÃ©m prohlÃ­Å¾eÄi. UchovÃ¡vÃ¡me si v nÄ›m navÃ­c kromÄ› uÅ¾ivatelskÃ©ho jmÃ©na a hesla takÃ© uÅ¾ivatelskou roli, kterÃ¡ nÃ¡m  usnadÅˆuje prÃ¡ci a minimalizuje  pÅ™Ã­stup do DB.  PomocÃ­ pÅ™Ã­stupovÃ©ho tokenu, kterÃ½ dostaneme importovÃ¡nÃ­m AuthContextu, taktÃ©Å¾ realizujeme volÃ¡nÃ­ metod na API.</p>
 
-<p style="text-align:center;"><img src="db.png" alt="Schéma relaèní databáze" height="800" ></p>
+<h3>Autorizace</h3>
+<p>Autorizace je Å™eÅ¡ena za pomocÃ­ privÃ¡tnÃ­ch cest, tzv. â€ Private Routesâ€œ, kterÃ½mi â€obalujemeâ€œ jednotlivÃ© strÃ¡nky a urÄujeme kdo k nim mÃ¡ pÅ™Ã­stup (na zÃ¡kladÄ› role, pÅ™ihlÃ¡Å¡enÃ½, nepÅ™ihlÃ¡Å¡enÃ½). </p>
+
+<h3>Frontend</h3>
+<p>Jak bylo zmÃ­nÄ›no je implementovÃ¡n za pomocÃ­ knihovny ReactJS spoleÄnÄ› s HTML+CSS. Je ÄlenÄ›n ve sloÅ¾ce /frontend/Pages na strÃ¡nky, kterÃ© jsou volÃ¡ny z App.js, Tam je taktÃ©Å¾ Å™eÅ¡enÃ¡ autorizace. Tzv. domovskÃ½m bodem pro kaÅ¾dÃ©ho uÅ¾ivatele, nehledÄ› na roli, je HomePage odkud se mÅ¯Å¾e odkazovat na dalÅ¡Ã­ strÃ¡nky.  NÄ›kterÃ© strÃ¡nky implementujÃ­ /frontend/Compoments takÃ© komponenty. AutentizaÄnÃ­ proces se nachÃ¡zi v AuthContext.js</p>
+	
+<p style="text-align:center;"><img src="db.png" alt="SchÃ©ma relaÄnÃ­ databÃ¡ze" height="800" ></p>
 
 <h2>Instalace</h2>
-<h3>Pøerekvizity</h3>
+<h3>PÅ™erekvizity</h3>
 <p>Python 3+, Django 2+</p>
-<h3>Postup spu¹tení</h3>
+<h3>Postup spuÅ¡tenÃ­</h3>
 <ul>
-<li>V hlavní slo¾ce projektu (se souborem manage.py):</li>
-<li>Instalujte softwarové po¾adavky pomocí pip install -r /cesta/k/requirements.txt</li>
-<li>Spustite server pomocí: python3 manage.py runserver</li>
-<li>Stránka by mìla bıt pøístupná na http://127.0.0.1:8000/</li>
+<li>V hlavnÃ­ sloÅ¾ce projektu (se souborem manage.py):</li>
+<li>Instalujte softwarovÃ© poÅ¾adavky pomocÃ­ pip install -r /cesta/k/requirements.txt</li>
+<li>Spustite server pomocÃ­: python3 manage.py runserver</li>
+<li>StrÃ¡nka by mÄ›la bÃ½t pÅ™Ã­stupnÃ¡ na http://127.0.0.1:8000/</li>
 </ul>
 
 <li>postup instalace na server,</li>
-<li>softwarové po¾adavky (verze PHP apod.),</li>
-<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+<li>softwarovÃ© poÅ¾adavky (verze PHP apod.),</li>
+<li>jak rozbalit, konfigurovat, inicializovat databÃ¡zi, ...</li>
 
-<h2>Známé problémy</h2>
-<p>Zde popi¹te, které body zadání nejsou implementovány a z jakého dùvodu. Napø. &bdquo;Z èasovıch dùvodù nebyla implementována správa u¾ivatelù.&rdquo; Pomù¾ete tím zrychlit hodnocení, kdy¾ neimplementované funkce nebudeme muset dlouze hledat.</p>
+<h2>ZnÃ¡mÃ© problÃ©my</h2>
+<p>Zde popiÅ¡te, kterÃ© body zadÃ¡nÃ­ nejsou implementovÃ¡ny a z jakÃ©ho dÅ¯vodu. NapÅ™. &bdquo;Z ÄasovÃ½ch dÅ¯vodÅ¯ nebyla implementovÃ¡na sprÃ¡va uÅ¾ivatelÅ¯.&rdquo; PomÅ¯Å¾ete tÃ­m zrychlit hodnocenÃ­, kdyÅ¾ neimplementovanÃ© funkce nebudeme muset dlouze hledat.</p>
 
 </body>
 </html>
