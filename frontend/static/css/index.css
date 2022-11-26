@@ -249,6 +249,15 @@ a:link, a:visited {
     text-align: left;
 }
 
+.usera--table {
+    margin: 5px 0 5px 16px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    height: 40px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
 
 .ticket--table {
     margin: 5px 0 5px 16px;

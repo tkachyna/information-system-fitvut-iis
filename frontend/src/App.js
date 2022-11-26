@@ -18,6 +18,7 @@ import AddRequest from "./Pages/AddRequest"
 import ListOfServiceRequestsPage from "./Pages/ListOfServiceRequestsPage"
 import ServiceRequestPage from "./Pages/ServiceRequestsPage"
 import AddRequestCommentPage from "./Pages/AddRequestCommentPage";
+import UserMnanagement from "./Pages/UserManagement"
 
 function PrivateRoute({children}) {
   let {user} = useContext(AuthContext)
@@ -44,6 +45,7 @@ function App () {
             <Route  path="/servicerequests2" element={<ListOfServiceRequestsPage />}/>
             <Route  path="/editaccount" element={<EditAccountPage />}/>
             <Route  path="/ticket" element={<TicketInfoPage />}/>
+            <Route  path="/usermanagement" element={<UserMnanagement />}/>
             <Route  path="/createreqcomment" element={<AddRequestCommentPage/>}/>
             <Route  path="/createcomment" element={<AddTicketCommentPage/>}/>
             <Route  path="/servicerequests" element={<ListOfTasksPage />}/>

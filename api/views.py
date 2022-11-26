@@ -462,6 +462,26 @@ def editUserRole(request):
     db.dispose()
     return Response(data={'User role changed'}, status=status.HTTP_200_OK)
 
+
+@api_view(['POST'])
+def editUser(request):
+    data = json.loads(request.body)
+    print(data)
+    owner = request.user
+    owner.username = data['user']
+    owner.first_name = data['first_name']
+    owner.last_name = data['last_name']
+    owner.email = data['email']
+    owner.city = data['city']
+    owner.house_number = data['house_number']
+    owner.street = data['street']
+    owner.zipcode = data['zipcode']
+    owner.phone_number = data['phone_number']
+    owner.role = data['role']
+    owner.save()
+    return HttpResponse()
+
+
 @api_view(['GET'])
 def getRequests(request):
     request = Request.sa

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component, useState, useEffect, useContext } from 'react'
 import Button from '@mui/material/Button';
 import AuthContext from '../context/AuthContext'
-import { Alert, AlertTitle } from '@mui/material';
+import { Alert, AlertTitle, Divider } from '@mui/material';
 import { Link } from 'react-router-dom'
 import Spinner from '../components/Spinner';
 
@@ -71,7 +71,25 @@ const HomePage = () => {
     }
     {user.role == 4
     && 
+    <div>
+    <Button  href='/usermanagement' type="submit" variant="outlined" sx = {style} >Správa uživatelů</Button> 
+    <br/>
+    <Divider sx={{m: 2, width: 500}}/>
+    <br/>
+    <Button  href='/addrequest' type="submit" variant="outlined" sx = {style} >Vytvoření servisního požadavku  </Button> 
+    <br/>
+    <Button  href='/addticket' type="submit" variant="outlined" sx = {style} >Nahlásit závadu</Button> 
+    <br/>
+    <Divider sx={{m: 2, width: 500}}/>
+    <br/>
+    <Button  href='/servicerequests2' type="submit" variant="outlined" sx = {style} >Spravovat servisní požadavky</Button>
+    <br/>
+    <Button  href='/servicerequests' type="submit" variant="outlined" sx = {style} >Spravovat nahlášené závady</Button>
+    <br/>
+    <Divider sx={{m: 2, width: 500}}/>
+    <br/>
     <Button  href='/editaccount' type="submit" variant="outlined" sx = {style} >Upravit účet</Button> 
+    </div>
     }
     {user.role == 3
     &&
