@@ -35,7 +35,7 @@ export const AuthProvider = ({children}) => {
 
    
         }else{
-            <Alert severity='error'>Špatně zadané uživatelské jméno nebo heslo</Alert>
+            return "spatne zadane heslo"
         }
     }
 

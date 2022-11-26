@@ -155,7 +155,7 @@ const TicketInfoPage = () => {
             </div>
             <Divider style={{width: 370}}  sx={{ borderBottomWidth: 2, color: "black" }}/>
             <br/>
-            {user.role == 1
+            {(user.role == 2 || user.role == 1)
             &&
             <span style={getColor()}>{getState()}</span>
             }
