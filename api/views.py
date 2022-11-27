@@ -245,6 +245,7 @@ def postTicketComment(request):
         db.dispose()
         session.commit()
         serialized = {c.name: getattr(tc, c.name) for c in ticket_comment.__table__.columns}
+        db.dispose()
         return Response(data=serialized, status=status.HTTP_200_OK)
     except:
         db.dispose()
@@ -378,7 +379,6 @@ def editRequest(request):
         return Response(data=r_serialized, status=status.HTTP_200_OK)
     except:
         db.dispose()
-        print("this")
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])

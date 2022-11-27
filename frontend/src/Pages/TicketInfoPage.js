@@ -203,7 +203,7 @@ const TicketInfoPage = () => {
 				<div className='ticketinfopage--icons-text'>
 					<MessageIcon className='ticketinfopage--icons'/>
 					<span style={{color: "#2074d4"}} >Komentáře</span>
-				{user.role == 3 || user.role == 4 &&
+				{(user.role == 3 || user.role == 4) &&
 				<AddIcon className='ticketinfopage--icons-2' onClick={() => navigate(`/createticketcomment?ticket_id=${id}`)}/>
 				}
 				</div>
