@@ -116,9 +116,8 @@ def createTicket(request):
     ticket = Ticket.sa
     data = json.loads(request.body)
     url = data['url']
-    # user = User.sa
     u = session.query(User).filter(User.id == data['id'])
-    print(type(u))
+
     if u.count() == 0:
         db.dispose()
         return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -126,12 +125,11 @@ def createTicket(request):
         db.dispose()
         return Response(data={'User is not citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # print(data['text'])
     try:
-        # kontrola, ze je customer citizen a admin spravce??
+        # check if citizen
         new_ticket = ticket(description=data['description'], name=data['name'], state=1, customer_id=data['id'], admin_id=67,
                       creation_date_time=timezone.now())
-        # print(new_ticket.description)
+
         session.add(new_ticket)
         session.commit()
         if url != "":
@@ -144,11 +142,8 @@ def createTicket(request):
                 db.dispose()
                 return Response("Invalid url", status=status.HTTP_400_BAD_REQUEST)
 
-
-        # tickets = ticket.query().all()
-        # print(tickets)
         data = {c.name: getattr(new_ticket, c.name) for c in ticket.__table__.columns}
-        # print(test_as_dic)
+
         db.dispose()
         return Response(data=data, status=status.HTTP_200_OK)
     except:
@@ -175,11 +170,9 @@ def getMyTickets(request):
 
 @api_view(['DELETE'])
 def deleteTicket(request):
-    #ticket = Ticket.sa
     params = request.query_params.dict()
 
     id = params['id']
-    print(params, id)
 
     try:
         t = Ticket.objects.get(id=id)
@@ -219,7 +212,6 @@ def getTicketComments(request):
 @api_view(['POST'])
 def postTicketComment(request):
     ticket_comment = TicketComment.sa
-    # user = User.sa
     ticket = Ticket.sa
 
     db = create_engine(
@@ -229,13 +221,11 @@ def postTicketComment(request):
     data = json.loads(request.body)
     u = session.query(User).filter(User.id == data['author_id'])
     if u.count() == 0:
-        #session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
 
     t = session.query(ticket).filter(ticket.id == data['ticket_id'])
     if t.count() == 0:
-        #session.close()
         db.dispose()
         return Response(data={'Incorrect ticket'}, status=status.HTTP_400_BAD_REQUEST)
     try:
