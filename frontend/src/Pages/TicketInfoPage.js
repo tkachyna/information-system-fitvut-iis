@@ -117,9 +117,7 @@ const TicketInfoPage = () => {
 		let data = await response.json()
 
 		if(response.status == 200) {
-			setTicket(data)
 			setTicketState(data.state)
-			getTicketComments()
 		}
   	}
 
