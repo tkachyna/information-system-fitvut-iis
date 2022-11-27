@@ -35,6 +35,16 @@ const SignupPage = () =>  {
     }
 
     function validateForms() {
+      let regexHouseNumber = new RegExp(/^\d+$/)
+      let regexZipCode = new RegExp(/^\d{3} \d{2}$/) 
+      let regexPhoneNumber = new RegExp(/^\d{9}$/)
+
+      let regexHouseNumberResult = regexHouseNumber.test(formData.house_number)
+      let regexZipCodeResult = regexZipCode.test(formData.zipcode)
+      let regexPhoneNumberResult = regexPhoneNumber.test(formData.phone_number)
+    
+      console.log(regexHouseNumber)
+      console.log(formData.house_number)
         if (formData.password !== formData.password_again) {
             setAlertCode(ALERT_ERROR)
             setAlertMessage("Zadaná hesla se neshodují!")
@@ -44,6 +54,32 @@ const SignupPage = () =>  {
             setAlertCode(ALERT_ERROR)
             setAlertMessage("Vyplň všechna pole s * !")
             return false;
+        
+        } else if (formData.username == "") {
+            setAlertCode(ALERT_ERROR)
+            setAlertMessage("Pole Uživatelské jméno nesmí být prázdné!")
+            return false
+    
+          } else if (formData.email == "") {
+            setAlertCode(ALERT_ERROR)
+            setAlertMessage("Pole Email nesmí být prázdné!")
+            return false
+    
+          } else if (formData.house_number != "" && !regexHouseNumberResult) {
+            setAlertCode(ALERT_ERROR)
+            setAlertMessage("Regulární výraz pro Číslo popisné selhal! (musí obsahovat pouze čísla)")
+            return false
+    
+          } else if (formData.zipcode != "" && !regexZipCodeResult) {
+            setAlertCode(ALERT_ERROR)
+            setAlertMessage("Regulární výraz pro PSČ selhal! (správný tvar: XXX XX)")
+            return false
+            
+          } else if (formData.phone_number != "" && !regexPhoneNumberResult) {
+            setAlertCode(ALERT_ERROR)
+            setAlertMessage("Regulární výraz pro Telefonní číslo selhal!")
+            return false
+            
 
         } else {
             return true;
