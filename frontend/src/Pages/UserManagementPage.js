@@ -7,7 +7,7 @@ import UserAdmin from '../components/UserAdmin'
 const UserManagementPage = () => {
 
   let {authTokens, logoutUser, user} = useContext(AuthContext)
-  let [listOfTickets, setListOfTickets] = useState([])
+  let [userList, setUserList] = useState([])
   let [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
@@ -24,17 +24,20 @@ const UserManagementPage = () => {
 
     })
     
+	
+
     let data = await response.json()
-    console.log(data)
+
     if(response.status == 200) {
         setIsLoaded(true)
-        setListOfTickets(data)
-
+		let sortby = ([...data].sort((a,b) => b.role - a.role))
+		setUserList(sortby);
 
     }
   }
 
-  const items = listOfTickets.map((item) => {
+  
+  const items = userList.map((item) => {
     return (
         <UserAdmin
             key={item.id}
@@ -62,7 +65,7 @@ const UserManagementPage = () => {
             <td style={{width: 120}}>Popisné číslo</td>
             <td style={{width: 200}}>PSČ</td>
             <td style={{width: 200}}>Telefonní číslo</td>
-            <td style={{width: 50}}>Role</td>
+            <td style={{width: 50}} >Role</td>
             <td style={{width: 100}}></td>
             <td style={{width: 100}}></td>
           </tr>
