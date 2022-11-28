@@ -95,6 +95,7 @@ def getUserID(request):
 def changeUserInfo(request):
     data = json.loads(request.body)
     owner = request.user
+    print(data)
     owner.username = data['user']
     owner.first_name = data['first_name']
     owner.last_name = data['last_name']
@@ -103,6 +104,7 @@ def changeUserInfo(request):
     owner.street = data['street']
     owner.zipcode = data['zipcode']
     owner.phone_number = data['phone_number']
+    owner.house_number = data['house_number']
     owner.save()
     return HttpResponse()
 
