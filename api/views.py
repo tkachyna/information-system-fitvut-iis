@@ -86,8 +86,10 @@ def getUserID(request):
     print(result[0])
     a = result[0][0]
     serializer = UserSerializer(a)
+    data = serializer.data
+    session.close()
     db.dispose()
-    return Response(serializer.data)
+    return Response(data)
 
 @api_view(['POST'])
 def changeUserInfo(request):
