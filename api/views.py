@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db import connection
 # Create your views here.
 
 from rest_framework import status
@@ -23,6 +24,10 @@ from sqlalchemy.orm import sessionmaker
 User = User.sa
 # listing view for testing queries
 
+db = create_engine(
+        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+Session = sessionmaker(bind=db)
+session = Session()
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -72,9 +77,9 @@ def regUser(request):
 def getUserID(request):
     data = json.loads(request.body)
     print(data['id'])
-    db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+    # db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    # Session = sessionmaker(bind=db)
+    # session = Session()
     stmt = select(User).where(User.id == data['id'])
     result = session.execute(stmt).all()
     print(result[0])
@@ -110,18 +115,20 @@ def changePassword(request):
 
 @api_view(['POST'])
 def createTicket(request):
-    db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+    # db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    # Session = sessionmaker(bind=db)
+    # session = Session()
     ticket = Ticket.sa
     data = json.loads(request.body)
     url = data['url']
     u = session.query(User).filter(User.id == data['id'])
 
     if u.count() == 0:
+        session.close()
         db.dispose()
         return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
     if u[0].role not in (1,3,4):
+        session.close()
         db.dispose()
         return Response(data={'User is not citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -139,14 +146,16 @@ def createTicket(request):
                 session.add(p)
                 session.commit()
             except:
+                session.close()
                 db.dispose()
                 return Response("Invalid url", status=status.HTTP_400_BAD_REQUEST)
 
         data = {c.name: getattr(new_ticket, c.name) for c in ticket.__table__.columns}
-
+        session.close()
         db.dispose()
         return Response(data=data, status=status.HTTP_200_OK)
     except:
+        session.close()
         db.dispose()
         return Response(data={'Incorrect data'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -213,39 +222,42 @@ def getTicketComments(request):
 def postTicketComment(request):
     ticket_comment = TicketComment.sa
     ticket = Ticket.sa
-
-    db = create_engine(
-        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+    # db = create_engine(
+    #    "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    # Session = sessionmaker(bind=db)
+    # session = Session()
     data = json.loads(request.body)
     u = session.query(User).filter(User.id == data['author_id'])
     if u.count() == 0:
+        session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
 
     t = session.query(ticket).filter(ticket.id == data['ticket_id'])
     if t.count() == 0:
+        session.close()
         db.dispose()
         return Response(data={'Incorrect ticket'}, status=status.HTTP_400_BAD_REQUEST)
     try:
         tc = ticket_comment(ticket_id=data['ticket_id'], text=data['text'], creation_date_time=timezone.now(),
                             author_id=data['author_id'])
         session.add(tc)
-        db.dispose()
         session.commit()
         serialized = {c.name: getattr(tc, c.name) for c in ticket_comment.__table__.columns}
+        session.close()
+        db.dispose()
         return Response(data=serialized, status=status.HTTP_200_OK)
     except:
+        session.close()
         db.dispose()
         return Response(data={'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 def createRequest(request):
-    db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+    # db = create_engine("postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    # Session = sessionmaker(bind=db)
+    # session = Session()
     req = Request.sa
     ticket = Ticket.sa
     data = json.loads(request.body)
@@ -253,14 +265,17 @@ def createRequest(request):
     u = session.query(User).filter(User.id == data['id'])
     print(type(u))
     if u.count() == 0:
+        session.close()
         db.dispose()
         return Response(data={'Not existing citizen!!'}, status=status.HTTP_400_BAD_REQUEST)
     if u[0].role not in (3,4):  #manager
+        session.close()
         db.dispose()
         return Response(data={'User is not manager!!'}, status=status.HTTP_400_BAD_REQUEST)
     # valid ticket check
     t = session.query(ticket).filter(ticket.id == data['ticket_id'])
     if t.count() == 0:
+        session.close()
         db.dispose()
         return Response(data={'Assign valid ticket!!'}, status=status.HTTP_400_BAD_REQUEST)
     # technician assign check -not necessary?
@@ -276,19 +291,21 @@ def createRequest(request):
         session.commit()
 
         r_serialized = {c.name: getattr(r, c.name) for c in req.__table__.columns}
+        session.close()
         db.dispose()
         return Response(data=r_serialized, status=status.HTTP_200_OK)
     except:
+        session.close()
         db.dispose()
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 def postRequestComment(request):
-    db = create_engine(
-        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+    # db = create_engine(
+    #     "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    # Session = sessionmaker(bind=db)
+    # session = Session()
     data = json.loads(request.body)
     print(data)
     req = Request.sa
@@ -297,54 +314,56 @@ def postRequestComment(request):
     u = session.query(User).filter(User.id == data['author_id'])
     print(u[0].role)
     if u.count() == 0:
-        #session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
     if u[0].role not in [2,3,4]:  #change to manager (3)
-        #session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect user 2'}, status=status.HTTP_400_BAD_REQUEST)
     # valid request check
     r = session.query(req).filter(req.id == data['request_id'])
     if r.count() == 0:
-        #session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect request'}, status=status.HTTP_400_BAD_REQUEST)
     try:
         rc = request_comment(request_id=data['request_id'], text=data['text'], creation_date_time=timezone.now(),
                             author_id=data['author_id'])
         session.add(rc)
-        db.dispose()
         session.commit()
         rc_serialized = {c.name: getattr(rc, c.name) for c in request_comment.__table__.columns}
+        session.close()
+        db.dispose()
         return Response(data=rc_serialized, status=status.HTTP_200_OK)
     except:
+        session.close()
         db.dispose()
         return Response(data={'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def editRequest(request):
-    db = create_engine(
-        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+    # db = create_engine(
+     #   "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    #Session = sessionmaker(bind=db)
+    #session = Session()
     req = Request.sa
     ticket = Ticket.sa
     data = json.loads(request.body)
     # valid user check
     u = session.query(User).filter(User.id == data['author_id'])
     if u.count() == 0:
-        # session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
     if u[0].role not in [2,3,4]:  # change to manager (3)
-        # session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
     # valid request check
     r = session.query(req).filter(req.id == data['id'])
     if r.count() == 0:
-        # session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect request'}, status=status.HTTP_400_BAD_REQUEST)
     # technician assign check -not necessary?
@@ -364,9 +383,11 @@ def editRequest(request):
         session.commit()
         r = session.query(req).filter(req.id == data['id'])
         r_serialized = {c.name: getattr(r[0], c.name) for c in req.__table__.columns}
+        session.close()
         db.dispose()
         return Response(data=r_serialized, status=status.HTTP_200_OK)
     except:
+        session.close()
         db.dispose()
         print("this")
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
@@ -406,26 +427,26 @@ def getUsers(request):
 
 @api_view(['POST'])
 def editTicket(request):
-    db = create_engine(
-        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+    # db = create_engine(
+    #    "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    #Session = sessionmaker(bind=db)
+    #session = Session()
     ticket = Ticket.sa
     data = json.loads(request.body)
     # valid user check
     u = session.query(User).filter(User.id == data['author_id'])
     if u.count() == 0:
-        # session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
     if u[0].role not in (3,4):  # change to manager (3)
-        # session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect user'}, status=status.HTTP_400_BAD_REQUEST)
     # valid ticket check
     t = session.query(ticket).filter(ticket.id == data['id'])
     if t.count() == 0:
-        # session.close()
+        session.close()
         db.dispose()
         return Response(data={'Incorrect ticket'}, status=status.HTTP_400_BAD_REQUEST)
     # technician assign check -not necessary?
@@ -434,22 +455,25 @@ def editTicket(request):
         session.commit()
         t = session.query(ticket).filter(ticket.id == data['id'])
         r_serialized = {c.name: getattr(t[0], c.name) for c in ticket.__table__.columns}
+        session.close()
         db.dispose()
         return Response(data=r_serialized, status=status.HTTP_200_OK)
     except:
+        session.close()
         db.dispose()
         return Response(data={'Incorect data'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def editUserRole(request):
     data = json.loads(request.body)
-    db = create_engine(
-        "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
-    Session = sessionmaker(bind=db)
-    session = Session()
+    # db = create_engine(
+     #   "postgresql://sjveswfknevejv:9e0fa8e636ec37e3291efd037869aa17e7a647aaaefa6cd388a3f6b06daaa21f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d9qsrplp2cv1ao")
+    # Session = sessionmaker(bind=db)
+    # session = Session()
     session.query(User).filter(User.id == data['id']).update(
         {"role": data['role']})
     session.commit()
+    session.close()
     db.dispose()
     return Response(data={'User role changed'}, status=status.HTTP_200_OK)
 
