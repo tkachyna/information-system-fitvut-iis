@@ -1,5 +1,5 @@
 /*
-    This source was used from "https://github.com/divanov11/refresh-token-interval/blob/master/frontend/src/context/AuthContext.js" and then edited fow own use.
+    This source code was used from "https://github.com/divanov11/refresh-token-interval/blob/master/frontend/src/context/AuthContext.js" and then edited fow own use.
 */
 import jwtDecode from 'jwt-decode';
 import { createContext, useState, useEffect } from 'react'
