@@ -6,9 +6,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.db import connection
 # Create your views here.
 
+from django import db
 from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -19,7 +19,7 @@ from .serializers import ModelSerializer, TicketSerializer, UserSerializer
 from .models import Ticket, User, TicketComment, Request, RequestComment, Picture
 
 from sqlalchemy import create_engine, select, MetaData
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, close_all_sessions
 #make entities available as SQLAlchemy models
 User = User.sa
 # listing view for testing queries
@@ -29,6 +29,7 @@ db = create_engine(
 Session = sessionmaker(bind=db)
 session = Session()
 
+db2 = db
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -531,3 +532,5 @@ def deleteAccount(request):
     user = User.objects.get(id=data['id'])
     user.delete()
     return HttpResponse()
+
+close_all_sessions()

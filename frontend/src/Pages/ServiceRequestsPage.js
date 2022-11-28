@@ -35,7 +35,6 @@ const ServiceRequestPage = () => {
 
     useEffect( () => {
         getRequest()
-        getListOfUsers()
     }, [])
 
     function handleChange3(event) {
@@ -122,7 +121,7 @@ const ServiceRequestPage = () => {
         let data = await response.json()
 
         if (response.status == 200) {
-            console.log(data)
+     
             for (let i = 0; i < data.length; i++) {
                 if (t_id.indexOf(data[i].id) >= 0 && data[i].role == 2) {
                     setTechnicians(oldData => [...oldData, data[i]])
@@ -190,38 +189,12 @@ const ServiceRequestPage = () => {
 	})
 	}
 
-    let getListOfUsers = async() => {
-        let response = await fetch("api/getUsers", {
-            method: 'GET',
-            headers:{
-                'Content-Type':'application/json',
-                'Authorization':'Bearer ' + String(authTokens.access)
-            }
-        })
-
-      let data = await response.json()
-
-      if (response.status == 200) {
-            for (let i = 0; i< data.length; i++) {
-                console.log(data[i])
-                if(data[i].id == props.item.author_id && data[i].role == 2) {
-                    console.log(data[i].role)
-                    setName(data[i].username)
-                }
-                
-            } 
-            console.log(data)
-        }
-        
-        
-    } 
 
 	const comments = requestComment.map(item => {
 		return (
 			<Comment
 				key={item.id}
 				item={item}
-                name={name}
 			/>
 		)
 	})
