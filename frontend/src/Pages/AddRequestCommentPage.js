@@ -105,12 +105,6 @@ const AddRequestCommentPage = (props) => {
             Nevyplnil si všechny požadované informace!
           </Alert>
           }
-        <Button 
-          onClick={() => navigate(-1)}
-          variant="contained" 
-          sx={{ml: 2, mt: 2}}>
-          Zpět
-        </Button>
         <h3 className='signup--text-2'>Přidat komentář</h3>
         <form>
             <TextField
